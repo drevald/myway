@@ -1,0 +1,18 @@
+WHAT IS IT
+
+MYWAY is an application which should help guides to organize 
+route related information including but not limited to:
+- route details
+- objects to show
+- related photos
+- related persons info 
+- related events info
+
+INSTALLATION
+
+1. build environment:
+    > python3 -m venv .venv
+2. activate environment:
+    > source .venv
+3. restore required add-ons:
+    > pip install -r requirements.txt
