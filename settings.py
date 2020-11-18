@@ -1,3 +1,0 @@
-SECRET_KEY = 1
-DEBUG = True
-ROOT_URLCONF="urls"
