@@ -1,1 +1,3 @@
-configure(ROOT_URLCONF="urls", ALLOWED_HOSTS=['*'])
+SECRET_KEY = 1
+DEBUG = True
+ROOT_URLCONF="urls"
