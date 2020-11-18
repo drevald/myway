@@ -1,0 +1,25 @@
+version: '3.3'
+services:
+  postgres:
+    image: postgres:12-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=myway
+    volumes:
+      - data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+  web:
+    build: .
+    environment:
+      - DATABASE_URL=postgres://postgres:password@postgres:5432/myway
+      - PORT=8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+volumes:
+  data:
