@@ -1,0 +1,23 @@
+{% comment %} {% extends 'base.html' %} {% endcomment %}
+{% block content %}
+{% load i18n %}
+    <table>
+        <thead>
+            <tr>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Actions" %}</th>                    
+            </tr>
+        </thead>
+        {% for trip in trips %}
+        <tr>
+            <td>{{ trip.name }}</td>
+            <td>
+                <a href="{% url 'trips:delete' trips.pk %}">{% trans "Delete" %}</a>
+                <a href="{% url 'trips:details' trips.pk %}">{% trans "Update" %}</a>
+            </td>    
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{% url 'trips:create' 0 %}">{% trans "Add trip" %}</a>
+</div>
+{% endblock %}
