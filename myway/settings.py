@@ -15,7 +15,7 @@ DATABASES = {
 }
 
 INSTALLED_APPS = [
-    'myway'
+    'myway.core'
 ]
 
 TEMPLATES = [

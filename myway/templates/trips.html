@@ -12,12 +12,12 @@
         <tr>
             <td>{{ trip.name }}</td>
             <td>
-                <a href="{% url 'core:trips_delete' ps.pk %}">{% trans "Delete" %}</a>
-                <a href="{% url 'core:trips_details' ps.pk %}">{% trans "Update" %}</a>
+                <a href="{% url 'core:trips_delete' pk %}">{% trans "Delete" %}</a>
+                <a href="{% url 'core:trips_details' pk %}">{% trans "Update" %}</a>
             </td>    
         </tr>
         {% endfor %}
     </table>
-    <a href="{% url 'trips_create' %}">{% trans "Add trip" %}</a>
+    <a href="{% url 'core:trips_create' %}">{% trans "Add trip" %}</a>
 </div>
 {% endblock %}

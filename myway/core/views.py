@@ -21,7 +21,7 @@ def trips_create(request):
     form = forms.TripForm(request.POST or None, instance=trip)
     if form.is_valid():
         form.save()        
-        return HttpResponseRedirect(reverse('trips'))
+        return HttpResponseRedirect(reverse('core:trips_list'))
     template = 'trip_new.html'
     context = {'form':form}
     return render(request, template, context)
