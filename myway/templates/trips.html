@@ -12,8 +12,8 @@
         <tr>
             <td>{{ trip.name }}</td>
             <td>
-                <a href="{% url 'core:trips_delete' pk %}">{% trans "Delete" %}</a>
-                <a href="{% url 'core:trips_details' pk %}">{% trans "Update" %}</a>
+                <a href="{% url 'core:trips_delete'  trip.id %}">{% trans "Delete" %}</a>
+                <a href="{% url 'core:trips_details' trip.id %}">{% trans "Update" %}</a>
             </td>    
         </tr>
         {% endfor %}
