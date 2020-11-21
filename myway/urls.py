@@ -2,5 +2,6 @@ from django.urls import path
 from django.urls import include
 
 urlpatterns = [
-    path('', include('myway.core.urls'))
+    path('', include('myway.core.urls')),
 ] 
+

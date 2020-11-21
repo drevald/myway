@@ -1,33 +1,19 @@
-from django.http import HttpResponse, HttpResponseRedirect
-from django.template import loader
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
 from django.urls import reverse
+from django.views.generic import TemplateView
+from django.views.generic import ListView
+from django.views.generic.edit import CreateView
 from . import models
-from . import forms
 
-def index(request):
-    return HttpResponse('hi')
+class HomePageView(TemplateView):
+    template_name = 'index.html'
 
-def trips_list(request):
-    trips = models.Trip.objects.all()
-    template = loader.get_template('trips.html')
-    context = {'trips' : trips}
-    return HttpResponse(template.render(context, request))
+class TripsPageView(ListView):
+    model = models.Trip
+    template_name = 'trips.html'
+    context_object_name = 'all_trips_list' # new    
 
-def trips_create(request):
-    trip = models.Trip()
-    form = forms.TripForm(request.POST or None, instance=trip)
-    if form.is_valid():
-        form.save()        
-        return HttpResponseRedirect(reverse('core:trips_list'))
-    template = 'trip_new.html'
-    context = {'form':form}
-    return render(request, template, context)
-
-def trips_delete(request, pk):
-    return HttpResponse('trip_delete')
-
-def trips_details(request, pk):
-    return HttpResponse('trip_details')
+class TripsCreateView(CreateView):
+    model = models.Trip
+    template_name = 'trip_new.html'
+    fields = '__all__'
+    url = reverse('core:trips')

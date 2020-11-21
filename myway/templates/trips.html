@@ -1,23 +1,9 @@
-{% comment %} {% extends 'base.html' %} {% endcomment %}
+{% extends 'base.html' %}
 {% block content %}
-{% load i18n %}
-    <table>
-        <thead>
-            <tr>
-                <th>{% trans "Name" %}</th>
-                <th>{% trans "Actions" %}</th>                    
-            </tr>
-        </thead>
-        {% for trip in trips %}
-        <tr>
-            <td>{{ trip.name }}</td>
-            <td>
-                <a href="{% url 'core:trips_delete'  trip.id %}">{% trans "Delete" %}</a>
-                <a href="{% url 'core:trips_details' trip.id %}">{% trans "Update" %}</a>
-            </td>    
-        </tr>
-        {% endfor %}
-    </table>
-    <a href="{% url 'core:trips_create' %}">{% trans "Add trip" %}</a>
+{% for trip in object_list %}
+<div class="post-entry">
+<p>{{ trip.name }}</p>
 </div>
-{% endblock %}
+{% endfor %}
+<a href="{% url 'core:trips_create' %}">New Trip</a>
+{% endblock content %}
