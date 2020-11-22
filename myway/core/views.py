@@ -41,7 +41,7 @@ class PointsView(ListView):
 class PointCreateView(CreateView):
     model = models.ShowPoint
     template_name = 'point_new.html'
-    fields = ('latitude', 'longitude')
+    fields = ('name','latitude','longitude')
     success_url = reverse_lazy('core:points')
 
 class PointDeleteView(DeleteView):
@@ -52,7 +52,7 @@ class PointDeleteView(DeleteView):
 class PointEditView(UpdateView):
     model = models.ShowPoint
     template_name = 'point_edit.html'
-    fields = ('latitude','longitude')
+    fields = ('name','latitude','longitude')
     success_url = reverse_lazy('core:points')
 
 
@@ -64,7 +64,7 @@ class ObjectsView(ListView):
 class ObjectCreateView(CreateView):
     model = models.ShowObject
     template_name = 'object_new.html'
-    fields = ('name',)
+    fields = ('name','latitude','longitude')
     success_url = reverse_lazy('core:objects')
 
 class ObjectDeleteView(DeleteView):
@@ -75,7 +75,7 @@ class ObjectDeleteView(DeleteView):
 class ObjectEditView(UpdateView):
     model = models.ShowObject
     template_name = 'object_edit.html'
-    fields = ('name',)
+    fields = ('name','latitude','longitude')
     success_url = reverse_lazy('core:objects')
 
 class PhotosView(ListView):

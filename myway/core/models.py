@@ -2,11 +2,14 @@ from django.db import models
 from datetime import datetime
 
 class ShowObject(models.Model):
+    latitude = models.FloatField()
+    longitude = models.FloatField()
     name = models.CharField(max_length = 32)
 
 class ShowPoint(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
+    name = models.CharField(max_length=32, null=True)
 
 class Photo(models.Model):
     thumbnail = models.BinaryField()
