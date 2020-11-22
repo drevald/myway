@@ -1,8 +1,16 @@
 
 <html>
     <head>
+<style>
+    body {font-family: sans-serif; background-color: #eeeeee;}
+    h1   {color: blue;}
+    p    {color: red;}
+    td  {font-family: sans-serif; color: red}
+</style>
     </head>
     <body>
+        <a href="{% url 'core:home' %}">Home</a>
+        <hr>
         {% block content %}
         {% endblock %}
     </body>

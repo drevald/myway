@@ -1,9 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
-{% for trip in object_list %}
-<div class="post-entry">
-<p>{{ trip.name }}</p>
+{% load i18n %}
+<div>
+    <h1>{% trans "Trips" %}</h1>            
 </div>
+<table>
+{% for trip in object_list %}
+<tr>
+    <td>{{ trip.name }}</td>
+    <td>
+        <a href="{% url 'core:trip_delete' trip.id %}">Delete</a>
+        <a href="{% url 'core:trip_edit' trip.id %}">Edit</a>
+    </td>
+</tr>
 {% endfor %}
-<a href="{% url 'core:trips_create' %}">New Trip</a>
+</table>
+<a href="{% url 'core:trip_create' %}">New Trip</a>
 {% endblock content %}

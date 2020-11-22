@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load i18n %}
+<div>
+    <h1>{% trans "Show Points" %}</h1>            
+</div>
+<table>
+{% for point in points_list %}
+<tr>
+    <td>{{ point.latitude }}</td>
+    <td>{{ point.longitude }}</td>
+    <td>
+        <a href="{% url 'core:point_delete' point.id %}">Delete</a>
+        <a href="{% url 'core:point_edit' point.id %}">Edit</a>
+    </td>
+</tr>
+{% endfor %}
+</table>
+<a href="{% url 'core:point_create' %}">New Point</a>
+{% endblock content %}

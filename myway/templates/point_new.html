@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load i18n %}
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=<ваш API-ключ>" type="text/javascript"></script>
+    <script type="text/javascript">
+    
+    ymaps.ready(init);
+
+function init () {
+    var log = document.getElementById('log'),
+        
+        myMap = new ymaps.Map("map", {
+            center: [48.856929, 2.341198],
+            zoom: 1,
+            controls: ['zoomControl']
+        }),
+
+        myGeoObject = new ymaps.GeoObject({
+            geometry: {
+                type: "Point",
+                coordinates: [55.8, 37.8]
+            },
+            properties: {
+                iconContent: 'New Point'
+            }
+        }, {
+            preset: 'islands#blackStretchyIcon',
+            draggable: true
+        })
+
+        myGeoObject.events.add(['mapchange','dragend'], 
+            function (e) {
+                coords = myGeoObject.geometry.getCoordinates();
+                alert(e.get('type') + coords[1]);                
+            }
+        ); 
+
+        {% comment %} myCircle = new ymaps.Circle([myMap.getCenter(), 1000000], {
+            balloonContentBody: 'Балун',
+            hintContent: 'Хинт'
+        }, {
+            draggable: true
+        });
+
+    myCircle.events.add([
+        'mapchange', 'geometrychange', 'pixelgeometrychange', 'optionschange', 'propertieschange',
+        'balloonopen', 'balloonclose', 'hintopen', 'hintclose', 'dragstart', 'dragend'
+    ], function (e) {
+        log.innerHTML = '@' + e.get('type') + '<br/>' + log.innerHTML;
+    }); 
+
+    myMap.geoObjects.add(myCircle);
+    
+    {% endcomment %}
+
+        myMap.geoObjects.add(myGeoObject);
+
+
+
+
+    {% comment %} setupControls(myMap, myCircle); {% endcomment %}
+}
+
+function setupControls(map, geoObject) {
+    var btnProperty = new ymaps.control.Button('Свойство: balloonHeader'),
+        btnOption = new ymaps.control.Button('Опция: geodesic'),
+        btnRadius = new ymaps.control.Button('Изменить радиус');
+
+    btnProperty.options.set('maxWidth', 200);
+    btnOption.options.set('maxWidth', 200);
+    btnRadius.options.set('maxWidth', 200);
+
+    btnProperty.events.add(['select', 'deselect'], function (e) {
+        geoObject.properties.set('balloonContentHeader', e.get('type') == 'select' ? 'Заголовок' : undefined);
+    });
+    btnOption.events.add(['select', 'deselect'], function (e) {
+        geoObject.options.set('geodesic', e.get('type') == 'select');
+    });
+    btnRadius.events.add(['select', 'deselect'], function (e) {
+        geoObject.geometry.setRadius(e.get('type') == 'select' ? 2000000 : 1000000);
+    });
+
+    map.controls
+        .add(btnProperty)
+        .add(btnOption)
+        .add(btnRadius);
+}
+    
+    </script>
+    <style type="text/css">
+        html, body, #map {
+            width: 640;
+            height: 480;
+            margin: 0;
+            padding: 0;
+        }
+
+        #log {
+            width: 200px;
+            height: 100px;
+            position: absolute;
+            left: 5px;
+            bottom: 5px;
+            opacity: 0.7;
+            padding: 5px;
+            font-family: Courier, sans-serif;
+            font-size: 14px;
+            background: white;
+            overflow: auto;
+        }
+    </style>
+    <table>
+        <tr>
+            <td>
+<div>
+    <div>
+        <h1>{% trans "New Point" %}</h1>            
+    </div>
+    <form action="" method="post">
+        {% csrf_token %}             
+        {{ form.as_p }}
+        <input type="submit" value='{% trans "Save" %}'>
+        <input type="submit" value='{% trans "Cancel" %}'> 
+    </form>                
+</div>            
+            </td>
+            <td>
+<div id="map"></div>
+<div id="log"></div>          
+            </td>
+        </tr>
+    </table>
+
+{% endblock %}

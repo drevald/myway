@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load i18n %}
+<div>
+    <div>
+        <h1>{% trans "Trip Details" %}</h1>            
+    </div>
+    <form action="" method="post">
+        {% csrf_token %}             
+        {{ form.as_p }}
+        <input type="submit" value='{% trans "Save" %}'>
+        <input type="submit" value='{% trans "Cancel" %}'> 
+    </form>                
+</div>
+{% endblock %}
