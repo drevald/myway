@@ -1,15 +1,84 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load i18n %}
-<div>
-    <div>
-        <h1>{% trans "Trip Details" %}</h1>            
-    </div>
-    <form action="" method="post">
-        {% csrf_token %}             
-        {{ form.as_p }}
-        <input type="submit" value='{% trans "Save" %}'>
-        <input type="submit" value='{% trans "Cancel" %}'> 
-    </form>                
-</div>
+
+<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=<ваш API-ключ>" type="text/javascript"></script>
+<script type="text/javascript">
+ymaps.ready(init);
+var selected;
+
+
+function init () {
+    
+    myMap = new ymaps.Map("map", {
+    center: [55.7558171758732, 37.61771159788882],
+        zoom: 16
+    })
+
+{% for point in points %}
+    ShowPoint{{point.id}} = new ymaps.GeoObject({
+        geometry: {type: "Point",coordinates: [{{ point.latitude }}, {{ point.longitude }}]},
+        properties: {iconContent: '{{point.name}}'}
+    }, {preset: 'islands#blackStretchyIcon',draggable: false })
+    ShowPoint{{point.id}}.events.add(['click'], 
+        function (e) {
+            unselect();
+            if (selected != {{point.id}}) {
+                e.get('target').options.set('preset', 'islands#redStretchyIcon');
+                selected = {{point.id}};
+            } else {
+                e.get('target').options.set('preset', 'islands#blueStretchyIcon');
+                selected = null;
+            }
+        }
+    ); 
+    myMap.geoObjects.add(ShowPoint{{point.id}});
+{% endfor %}
+
+    function unselect() {
+        myMap.geoObjects.each(function (geoObject) {
+            geoObject.options.set('preset','islands#blueStretchyIcon')
+        });
+    }
+
+    firstButton = new ymaps.control.Button("Кнопка");
+    firstButton.events.add('click', function () {
+        if (selected == null) 
+            return;
+        var input = document.createElement("input");
+        input.setAttribute("type", "hidden");
+        input.setAttribute("name", "point_id");
+        input.setAttribute("value", selected);
+        document.forms[0].appendChild(input);       
+        document.forms[0].action = "/trips/12/add_point/" + selected;
+        document.forms[0].submit();
+    });
+    myMap.controls.add(firstButton, {float: 'right'});
+
+}
+
+</script>
+<table>
+    <tr>
+        <td valign="top">
+        <div>
+            <h1>{% trans "Trip Details" %}</h1>            
+        </div>
+        <form action="" method="post">
+            {% csrf_token %}             
+            {{ form.as_p }}
+            <p><label>Points:</label> </p>
+            <table>
+            {% for trip_point in trip_points %}
+            <tr><td>{{trip_point.trip.id}}</td><td>{{trip_point.point.id}}</td></tr>
+            {% endfor %}
+            </table>
+            <input type="submit" value='{% trans "Save" %}'>
+            <input type="submit" value='{% trans "Cancel" %}'> 
+        </form>                
+        </td>
+        <td><div id="map" style="width: 640;height: 480;"></div></td>
+    </tr>
+</table>
+
 {% endblock %}

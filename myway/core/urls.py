@@ -11,6 +11,8 @@ urlpatterns = [
     path('trips/<pk>/delete', views.TripDeleteView.as_view(), name = 'trip_delete'),
     path('trips/<pk>/edit', views.TripEditView.as_view(), name = 'trip_edit'),
     
+    path('trips/<pk>/add_point/<int:point_id>', views.add_point, name = 'trip_add_point'),
+    
     path('points', views.PointsView.as_view(), name='points'),
     path('point/create', views.PointCreateView.as_view(), name = 'point_create'),
     path('point/<pk>/delete', views.PointDeleteView.as_view(), name = 'point_delete'),

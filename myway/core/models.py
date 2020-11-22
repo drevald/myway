@@ -9,7 +9,7 @@ class ShowObject(models.Model):
 class ShowPoint(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
-    name = models.CharField(max_length=32, null=True)
+    name = models.CharField(max_length=32, null=True, default="Point")
 
 class Photo(models.Model):
     thumbnail = models.BinaryField()
@@ -58,3 +58,4 @@ class TripPoint(models.Model):
 class TripTag(models.Model):
     trip = models.ForeignKey(Trip, on_delete = models.CASCADE)
     tag = models.ForeignKey(Tag, on_delete = models.CASCADE)
+

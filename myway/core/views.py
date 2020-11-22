@@ -1,9 +1,11 @@
+from django.urls import reverse
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView
 from django.views.generic.edit import DeleteView
 from django.views.generic.edit import UpdateView
+from django.http import HttpResponseRedirect
 from . import models
 
 class HomePageView(TemplateView):
@@ -28,10 +30,12 @@ class TripDeleteView(DeleteView):
 
 class TripEditView(UpdateView):
     model = models.Trip
+    points = models.ShowPoint.objects.all()
+    trip_points = models.TripPoint.objects.all()
+    extra_context = {"points":list(points),"trip_points":list(trip_points)}
     template_name = 'trip_edit.html'
     fields = ('name',)
-    success_url = reverse_lazy('core:trips')        
-
+    success_url = reverse_lazy('core:trips')     
 
 class PointsView(ListView):
     model = models.ShowPoint
@@ -99,3 +103,10 @@ class PhotoEditView(UpdateView):
     template_name = 'photo_edit.html'
     fields = '__all__'
     success_url = reverse_lazy('core:photos')
+
+def add_point(request, pk, point_id):
+    trip_point = models.TripPoint(
+        trip = models.Trip.objects.get(id = pk),
+        point = models.ShowPoint.objects.get(id = point_id))
+    trip_point.save()
+    return HttpResponseRedirect(reverse('core:trip_edit', kwargs={'pk':pk}))
