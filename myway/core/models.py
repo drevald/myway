@@ -1,3 +1,5 @@
+# from django.db import Meta
+from django.db.models.constraints import UniqueConstraint
 from django.db import models
 from datetime import datetime
 
@@ -54,8 +56,11 @@ class TripPoint(models.Model):
     trip = models.ForeignKey(Trip, on_delete = models.CASCADE)
     point = models.ForeignKey(ShowPoint, on_delete = models.CASCADE)
     order = models.IntegerField
+    # class Meta:
+    #     constraints = [
+    #         models.UniqueConstraint(fields= ['trip','point','order']),
+    #     ]
 
 class TripTag(models.Model):
     trip = models.ForeignKey(Trip, on_delete = models.CASCADE)
     tag = models.ForeignKey(Tag, on_delete = models.CASCADE)
-

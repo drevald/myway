@@ -32,6 +32,9 @@ class TripEditView(UpdateView):
     model = models.Trip
     points = models.ShowPoint.objects.all()
     trip_points = models.TripPoint.objects.all()
+    print(">>>>>>>")
+    print(len(trip_points))
+    print("<<<<<<<")
     extra_context = {"points":list(points),"trip_points":list(trip_points)}
     template_name = 'trip_edit.html'
     fields = ('name',)
@@ -104,9 +107,30 @@ class PhotoEditView(UpdateView):
     fields = '__all__'
     success_url = reverse_lazy('core:photos')
 
-def add_point(request, pk, point_id):
+def trip_point_add(request, pk, point_id):
     trip_point = models.TripPoint(
         trip = models.Trip.objects.get(id = pk),
         point = models.ShowPoint.objects.get(id = point_id))
     trip_point.save()
     return HttpResponseRedirect(reverse('core:trip_edit', kwargs={'pk':pk}))
+
+def trip_point_delete(request, pk, point_id):
+    trip_point = models.TripPoint.objects.get(
+        trip = models.Trip.objects.get(id = pk),
+        point = models.ShowPoint.objects.get(id = point_id))
+    trip_point.delete()
+    return HttpResponseRedirect(reverse('core:trip_edit', kwargs={'pk':pk}))    
+
+def trip_point_up(request, pk, point_id):
+    # trip_point = models.TripPoint.objects.filter(
+    #     trip = models.Trip.objects.get(id = pk),
+    #     point = models.ShowPoint.objects.get(id = point_id))
+    # trip_point.delete()
+    return HttpResponseRedirect(reverse('core:trip_edit', kwargs={'pk':pk}))      
+
+def trip_point_down(request, pk, point_id):
+    # trip_point = models.TripPoint.objects.filter(
+    #     trip = models.Trip.objects.get(id = pk),
+    #     point = models.ShowPoint.objects.get(id = point_id))
+    # trip_point.delete()
+    return HttpResponseRedirect(reverse('core:trip_edit', kwargs={'pk':pk}))      
