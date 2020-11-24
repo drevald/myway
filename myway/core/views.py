@@ -30,12 +30,14 @@ class TripDeleteView(DeleteView):
 
 class TripEditView(UpdateView):
     model = models.Trip
-    points = models.ShowPoint.objects.all()
-    trip_points = models.TripPoint.objects.all()
-    extra_context = {"points":list(points),"trip_points":list(trip_points)}
     template_name = 'trip_edit.html'
     fields = ('name',)
     success_url = reverse_lazy('core:trips')     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['points'] = models.ShowPoint.objects.all()
+        context['trip_points'] = models.TripPoint.objects.all()
+        return context
 
 class PointsView(ListView):
     model = models.ShowPoint
@@ -58,7 +60,6 @@ class PointEditView(UpdateView):
     template_name = 'point_edit.html'
     fields = ('name','latitude','longitude')
     success_url = reverse_lazy('core:points')
-
 
 class ObjectsView(ListView):
     model = models.ShowObject
@@ -104,9 +105,51 @@ class PhotoEditView(UpdateView):
     fields = '__all__'
     success_url = reverse_lazy('core:photos')
 
-def add_point(request, pk, point_id):
+def trip_point_add(request, pk, point_id):
+    trip_points = models.TripPoint.objects.filter(trip = models.Trip.objects.get(id = pk))
     trip_point = models.TripPoint(
         trip = models.Trip.objects.get(id = pk),
-        point = models.ShowPoint.objects.get(id = point_id))
+        point = models.ShowPoint.objects.get(id = point_id),
+        order = len(list(trip_points)))
     trip_point.save()
     return HttpResponseRedirect(reverse('core:trip_edit', kwargs={'pk':pk}))
+
+def trip_point_delete(request, pk, point_id):
+    trip_points = models.TripPoint.objects.filter(trip = models.Trip.objects.get(id = pk))
+    trip_point_del = models.TripPoint.objects.get(
+        trip = models.Trip.objects.get(id = pk),
+        point = models.ShowPoint.objects.get(id = point_id))
+    for trip_point in trip_points:
+        if trip_point.order > trip_point_del.order:
+            trip_point.order = trip_point.order - 1
+            trip_point.save()
+    trip_point_del.delete()
+    return HttpResponseRedirect(reverse('core:trip_edit', kwargs={'pk':pk}))    
+
+def trip_point_up(request, pk, point_id):
+    trip_points = models.TripPoint.objects.filter(trip = models.Trip.objects.get(id = pk))
+    trip_point_mov = models.TripPoint.objects.get(
+        trip = models.Trip.objects.get(id = pk),
+        point = models.ShowPoint.objects.get(id = point_id))
+    for trip_point in trip_points:
+        if trip_point.order == trip_point_mov.order + 1:
+            trip_point.order = trip_point.order - 1
+            trip_point_mov.order = trip_point_mov.order + 1
+            trip_point.save()
+            trip_point_mov.save()
+            break
+    return HttpResponseRedirect(reverse('core:trip_edit', kwargs={'pk':pk}))       
+
+def trip_point_down(request, pk, point_id):
+    trip_points = models.TripPoint.objects.filter(trip = models.Trip.objects.get(id = pk))
+    trip_point_mov = models.TripPoint.objects.get(
+        trip = models.Trip.objects.get(id = pk),
+        point = models.ShowPoint.objects.get(id = point_id))
+    for trip_point in trip_points:
+        if trip_point.order == trip_point_mov.order - 1:
+            trip_point.order = trip_point.order + 1
+            trip_point_mov.order = trip_point_mov.order - 1
+            trip_point.save()
+            trip_point_mov.save()
+            break
+    return HttpResponseRedirect(reverse('core:trip_edit', kwargs={'pk':pk}))      

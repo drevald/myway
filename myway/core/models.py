@@ -53,7 +53,11 @@ class Trip(models.Model):
 class TripPoint(models.Model):
     trip = models.ForeignKey(Trip, on_delete = models.CASCADE)
     point = models.ForeignKey(ShowPoint, on_delete = models.CASCADE)
-    order = models.IntegerField
+    order = models.IntegerField()
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['trip', 'point'], name="trip_point")
+        ]
 
 class TripTag(models.Model):
     trip = models.ForeignKey(Trip, on_delete = models.CASCADE)

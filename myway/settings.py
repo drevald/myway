@@ -12,6 +12,17 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '5432'
     },
+    'replica': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'mytest',
+        'USER': 'postgres',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': '5432',
+        'TEST': {
+            'MIRROR': 'default',
+        }
+    }
 }
 
 INSTALLED_APPS = [
@@ -22,14 +33,5 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': ['myway/templates'],
-        # 'APP_DIRS': True,
-        # 'OPTIONS': {
-        #     'context_processors': [
-        #         'django.template.context_processors.debug',
-        #         'django.template.context_processors.request',
-        #         'django.contrib.auth.context_processors.auth',
-        #         'django.contrib.messages.context_processors.messages',
-        #     ],
-        # },
     },
 ]

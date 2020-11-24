@@ -4,6 +4,7 @@ from . import views
 app_name = 'core'
 
 urlpatterns = [
+
     path('', views.HomePageView.as_view(), name='home'),    
     
     path('trips', views.TripsView.as_view(), name='trips'),
@@ -11,7 +12,9 @@ urlpatterns = [
     path('trips/<pk>/delete', views.TripDeleteView.as_view(), name = 'trip_delete'),
     path('trips/<pk>/edit', views.TripEditView.as_view(), name = 'trip_edit'),
     
-    path('trips/<pk>/add_point/<int:point_id>', views.add_point, name = 'trip_add_point'),
+    path('trips/<pk>/trip_point_add/<int:point_id>', views.trip_point_add, name = 'trip_point_add'),
+    path('trips/<pk>/trip_point_delete/<int:point_id>', views.trip_point_delete, name = 'trip_point_delete'),
+    path('trips/<pk>/trip_point_up/<int:point_id>', views.trip_point_up, name = 'trip_point_up'),
     
     path('points', views.PointsView.as_view(), name='points'),
     path('point/create', views.PointCreateView.as_view(), name = 'point_create'),
@@ -29,6 +32,3 @@ urlpatterns = [
     path('photo/<pk>/edit', views.PhotoEditView.as_view(), name = 'photo_edit')
 
 ]
-
-
-
