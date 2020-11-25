@@ -43,11 +43,12 @@ class SimpleTest(TransactionTestCase):
         print("adding all 3 points to trip")
         for point in points:
             response = self.client.post(f'/trips/{trip.id}/trip_point_add/{point.id}', follow = True)
-            print(f"len = {len(list(models.TripPoint.objects.all()))}")
-            print(len(list(models.TripPoint.objects.filter(trip = trip))))
         trip_points = response.context['trip_points']
         for trip_point in trip_points:
             print(f"id={trip_point.id} order={trip_point.order}")
+        self.assertEquals(models.TripPoint.objects.get(id = 1).order, 0)
+        self.assertEquals(models.TripPoint.objects.get(id = 2).order, 1)
+        self.assertEquals(models.TripPoint.objects.get(id = 3).order, 2)
 
         #point down
         print("moving down point with id = 2")
@@ -55,6 +56,9 @@ class SimpleTest(TransactionTestCase):
         trip_points = response.context['trip_points']
         for trip_point in trip_points:
             print(f"id={trip_point.id} order={trip_point.order}")          
+        self.assertEquals(models.TripPoint.objects.get(id = 2).order, 0)
+        self.assertEquals(models.TripPoint.objects.get(id = 1).order, 1)
+        self.assertEquals(models.TripPoint.objects.get(id = 3).order, 2)
 
         #point up
         print("moving up point with id = 2")
@@ -62,10 +66,17 @@ class SimpleTest(TransactionTestCase):
         trip_points = response.context['trip_points']
         for trip_point in trip_points:
             print(f"id={trip_point.id} order={trip_point.order}")                 
+        self.assertEquals(models.TripPoint.objects.get(id = 1).order, 0)
+        self.assertEquals(models.TripPoint.objects.get(id = 2).order, 1)
+        self.assertEquals(models.TripPoint.objects.get(id = 3).order, 2)
 
         #point deletion
         print("deleting point with id = 2")
         response = self.client.post(f'/trips/{trip.id}/trip_point_delete/2', follow = True)
         trip_points = response.context['trip_points']
+        self.assertEquals(len(trip_points), 2)
         for trip_point in trip_points:
             print(f"id={trip_point.id} order={trip_point.order}")
+        # self.assertEquals(len(list(models.TripPoint.objects.filter(trip = models.Trip.objects.all()))), 2)
+        self.assertEquals(models.TripPoint.objects.get(id = 1).order, 0)
+        self.assertEquals(models.TripPoint.objects.get(id = 3).order, 1)

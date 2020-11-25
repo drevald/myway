@@ -15,7 +15,8 @@ urlpatterns = [
     path('trips/<pk>/trip_point_add/<int:point_id>', views.trip_point_add, name = 'trip_point_add'),
     path('trips/<pk>/trip_point_delete/<int:point_id>', views.trip_point_delete, name = 'trip_point_delete'),
     path('trips/<pk>/trip_point_up/<int:point_id>', views.trip_point_up, name = 'trip_point_up'),
-    
+    path('trips/<pk>/trip_point_down/<int:point_id>', views.trip_point_down, name = 'trip_point_down'),
+
     path('points', views.PointsView.as_view(), name='points'),
     path('point/create', views.PointCreateView.as_view(), name = 'point_create'),
     path('point/<pk>/delete', views.PointDeleteView.as_view(), name = 'point_delete'),
