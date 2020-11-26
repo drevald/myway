@@ -16,7 +16,10 @@ center: [55.7558171758732, 37.61771159788882],
     zoom: 16
 })
 
-var points = [];
+var points = new ymaps.GeoObjectCollection({}, {
+    preset: "islands#blackStretchyIcon",
+});
+
 
 {% for point in points %}
 
@@ -36,11 +39,11 @@ var points = [];
             }
         }
     ); 
-    points.push(ShowPoint{{point.id}}); 
+    points.add(ShowPoint{{point.id}});
 
 {% endfor %}
 
-//    myMap.geoObjects.add(points);
+    myMap.geoObjects.add(points);
 
     function unselect() {
         myMap.geoObjects.each(function (geoObject) {

@@ -59,6 +59,14 @@ class TripPoint(models.Model):
             models.UniqueConstraint(fields=['trip', 'point'], name="trip_point")
         ]
 
+class TripPointObject(models.Model):
+    trip_point = models.ForeignKey(TripPoint, on_delete = models.CASCADE)
+    object = models.ForeignKey(ShowObject, on_delete=models.CASCADE)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['trip_point', 'object'], name="trip_point_object")
+        ]
+
 class TripTag(models.Model):
     trip = models.ForeignKey(Trip, on_delete = models.CASCADE)
     tag = models.ForeignKey(Tag, on_delete = models.CASCADE)

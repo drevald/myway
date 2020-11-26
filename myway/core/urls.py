@@ -18,6 +18,9 @@ urlpatterns = [
     path('trips/<pk>/trip_point_down/<int:point_id>', views.trip_point_down, name = 'trip_point_down'),
 
     path('trip_points/<pk>/edit', views.TripPointEditView.as_view(), name = 'trip_point_edit'),
+    path('trip_point/<pk>/object_add/<int:object_id>', views.trip_point_object_add, name = 'trip_point_object_add'),
+
+    path('trip_point_objects/<pk>/delete', views.trip_point_object_delete, name = 'trip_point_object_delete'),
 
     path('points', views.PointsView.as_view(), name='points'),
     path('point/create', views.PointCreateView.as_view(), name = 'point_create'),

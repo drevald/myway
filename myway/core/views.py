@@ -157,11 +157,26 @@ def trip_point_down(request, pk, point_id):
 class TripPointEditView(UpdateView):
     model = models.TripPoint
     template_name = 'trip_point_edit.html'
-    fields = '__all__'
+    fields = ()
     def get_success_url(self):
         trip_point = models.TripPoint.objects.get(id=self.kwargs.get('pk'))
         return reverse_lazy('core:trip_edit', kwargs={'pk':trip_point.trip.id})
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['objects'] = models.ShowObject.objects.all()
+        context['trip_point'] = models.TripPoint.objects.get(id=self.kwargs.get('pk'))
+        context['trip_point_objects'] = models.TripPointObject.objects.filter(trip_point=context['trip_point'])
         return context
+
+def trip_point_object_add(request, pk, object_id):
+    trip_point_object = models.TripPointObject(
+    trip_point = models.TripPoint.objects.get(id = pk),
+    object = models.ShowObject.objects.get(id = object_id))
+    trip_point_object.save()
+    return HttpResponseRedirect(reverse('core:trip_point_edit', kwargs={'pk':pk}))
+
+def trip_point_object_delete(request, pk):
+    trip_point_object = models.TripPointObject.get(id = pk)
+    trip_point = trip_point_object.trip_point
+    trip_point_object.delete()
+    return HttpResponseRedirect(reverse('core:trip_point_edit', kwargs={'pk':trip_point.id}))    
