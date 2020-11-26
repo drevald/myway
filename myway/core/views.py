@@ -180,3 +180,6 @@ def trip_point_object_delete(request, pk):
     trip_point = trip_point_object.trip_point
     trip_point_object.delete()
     return HttpResponseRedirect(reverse('core:trip_point_edit', kwargs={'pk':trip_point.id}))    
+
+def object_photo(request, pk):
+    return HttpResponseRedirect(reverse('core:object_edit', kwargs={'pk':pk}))
