@@ -1,5 +1,6 @@
 from django.urls import reverse
 from django.urls import reverse_lazy
+from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView
@@ -7,10 +8,10 @@ from django.views.generic.edit import DeleteView
 from django.views.generic.edit import UpdateView
 from django.http import HttpResponseRedirect
 from . import models
+from . import forms
 
 class HomePageView(TemplateView):
     template_name = 'index.html'
-
 
 class TripsView(ListView):
     model = models.Trip
@@ -182,4 +183,16 @@ def trip_point_object_delete(request, pk):
     return HttpResponseRedirect(reverse('core:trip_point_edit', kwargs={'pk':trip_point.id}))    
 
 def object_photo(request, pk):
-    return HttpResponseRedirect(reverse('core:object_edit', kwargs={'pk':pk}))
+    if request.method == 'POST':
+        form = forms.UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            handle_uploaded_file(request.FILES['file'])
+            return HttpResponseRedirect(reverse('core:object_edit', kwargs={'pk':pk}))
+    else:
+        form = forms.UploadFileForm()
+    return render(request, 'object_photo.html', {'form': form})
+
+def handle_uploaded_file(f):
+    with open('~/out', 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
