@@ -11,14 +11,15 @@ var selected;
 
 function init () {
     
-    myMap = new ymaps.Map("map", {
-    center: [55.7558171758732, 37.61771159788882],
-        zoom: 16
-    })
+myMap = new ymaps.Map("map", {
+center: [55.7558171758732, 37.61771159788882],
+    zoom: 16
+})
 
-
+var points = [];
 
 {% for point in points %}
+
     ShowPoint{{point.id}} = new ymaps.GeoObject({
         geometry: {type: "Point",coordinates: [{{ point.latitude }}, {{ point.longitude }}]},
         properties: {iconContent: '{{point.name}}'}
@@ -35,8 +36,11 @@ function init () {
             }
         }
     ); 
-    myMap.geoObjects.add(ShowPoint{{point.id}});
+    points.push(ShowPoint{{point.id}}); 
+
 {% endfor %}
+
+//    myMap.geoObjects.add(points);
 
     function unselect() {
         myMap.geoObjects.each(function (geoObject) {
@@ -44,7 +48,7 @@ function init () {
         });
     }
 
-    firstButton = new ymaps.control.Button("Кнопка");
+    firstButton = new ymaps.control.Button('{% trans "Add to route" %}');
     firstButton.events.add('click', function () {
         if (selected == null) 
             return;
@@ -58,10 +62,11 @@ function init () {
     });
     myMap.controls.add(firstButton, {float: 'right'});
 
-
-        multiRoute = new ymaps.multiRouter.MultiRoute({
-            referencePoints: [
-ShowPoint1, ShowPoint2
+    multiRoute = new ymaps.multiRouter.MultiRoute({
+        referencePoints: [
+{% for trip_point in trip_points %}
+    [{{trip_point.point.latitude}},{{trip_point.point.longitude}}],
+{% endfor %}
             ],
             params: {
 
@@ -75,10 +80,6 @@ multiRoute.model.setParams({
     myMap.geoObjects.add(multiRoute);
 
 }
-
-
-
-
 
 </script>
 <table>
@@ -97,14 +98,28 @@ multiRoute.model.setParams({
                 <td>{{trip_point.trip.id}}</td>
                 <td>{{trip_point.point.id}}</td>
                 <td><a href="{% url 'core:trip_point_delete' trip_point.trip.id trip_point.point.id %}">Delete</a></td>
+                <td><a href="{% url 'core:trip_point_edit' trip_point.id %}">Edit</a></td>                
             </tr>
             {% endfor %}
+            <tr>
+                <td colspan="3">
+                    <input type="button" value="Add">
+                    <input type="button" value="Preview">
+                    <input type="button" value="Hide">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <input type="submit" value='{% trans "Save" %}'>
+                    <input type="submit" value='{% trans "Cancel" %}'> 
+                </td>
+            </tr>
             </table>
-            <input type="submit" value='{% trans "Save" %}'>
-            <input type="submit" value='{% trans "Cancel" %}'> 
         </form>                
         </td>
-        <td><div id="map" style="width: 640;height: 480;"></div></td>
+        <td>
+            <div id="map" style="width: 640;height: 480;"/>
+        </td>
     </tr>
 </table>
 

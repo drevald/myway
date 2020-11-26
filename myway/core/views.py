@@ -153,3 +153,15 @@ def trip_point_down(request, pk, point_id):
             trip_point_mov.save()
             break
     return HttpResponseRedirect(reverse('core:trip_edit', kwargs={'pk':pk}))      
+
+class TripPointEditView(UpdateView):
+    model = models.TripPoint
+    template_name = 'trip_point_edit.html'
+    fields = '__all__'
+    def get_success_url(self):
+        trip_point = models.TripPoint.objects.get(id=self.kwargs.get('pk'))
+        return reverse_lazy('core:trip_edit', kwargs={'pk':trip_point.trip.id})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['objects'] = models.ShowObject.objects.all()
+        return context

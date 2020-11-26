@@ -77,6 +77,24 @@ class SimpleTest(TransactionTestCase):
         self.assertEquals(len(trip_points), 2)
         for trip_point in trip_points:
             print(f"id={trip_point.id} order={trip_point.order}")
-        # self.assertEquals(len(list(models.TripPoint.objects.filter(trip = models.Trip.objects.all()))), 2)
+        self.assertEquals(len(list(models.TripPoint.objects.filter(trip = models.Trip.objects.get(id=trip.id)))), 2)
         self.assertEquals(models.TripPoint.objects.get(id = 1).order, 0)
         self.assertEquals(models.TripPoint.objects.get(id = 3).order, 1)
+
+        #adding show object
+        print("adding sample object")
+        response = self.client.post(f'/object/create', data={"name":"Object one", "longitude":55, "latitude":37}, follow = True)
+        self.assertEqual(response.status_code, 200)
+
+        #adding show object
+        trip_points = list(models.TripPoint.objects.filter(trip = models.Trip.objects.get(id=trip.id)))
+        trip_point = trip_points.pop()
+        print(f"editing trip {trip.id} point {trip_point.id}")
+        response = self.client.post(f'/trips/{trip.id}/trip_point_edit/{trip_point.id}')
+        self.assertEqual(response.status_code, 200)
+        # # print(response.context['objects_list'])
+
+        # print(f'/trips/{trip.id}/edit')
+        # response = self.client.post(f'trip/{trip.id}/edit', follw=True)
+        # self.assertEqual(response.status_code, 200)
+        # # # print(response.context['objects_list'])
