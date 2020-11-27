@@ -36,6 +36,7 @@ urlpatterns = [
     path('photos', views.PhotosView.as_view(), name='photos'),
     path('photo/create', views.PhotoCreateView.as_view(), name = 'photo_create'),
     path('photo/<pk>/delete', views.PhotoDeleteView.as_view(), name = 'photo_delete'),
-    path('photo/<pk>/edit', views.PhotoEditView.as_view(), name = 'photo_edit')
+    path('photo/<pk>/edit', views.PhotoEditView.as_view(), name = 'photo_edit'),
+    path('photo/<pk>/view', views.photo_view, name = 'photo_view')
 
 ]

@@ -12,10 +12,14 @@ class ShowPoint(models.Model):
     name = models.CharField(max_length=32, null=True, default="Point")
 
 class Photo(models.Model):
-    thumbnail = models.BinaryField()
-    md5 = models.CharField(max_length = 32)
+    thumbnail = models.BinaryField(null=False)
+    md5 = models.CharField(max_length = 32, null=False)
     local = models.CharField(max_length = 32)
     remote = models.CharField(max_length = 32)
+    # class Meta:
+    #     constraints = [
+    #         models.Constraint(fields=['md5'], name="md5")
+    #     ]    
 
 class ShowPointObject(models.Model):
     object = models.ForeignKey(ShowObject, on_delete = models.CASCADE)

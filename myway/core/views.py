@@ -1,3 +1,6 @@
+import base64
+import hashlib
+from PIL import Image, ImageFilter
 from django.urls import reverse
 from django.urls import reverse_lazy
 from django.shortcuts import render
@@ -196,7 +199,35 @@ def object_photo(request, pk):
     return render(request, 'object_photo.html', {'form': form})
 
 def handle_uploaded_file(f):
-    with open('/home/denis/Projects/myway/out', 'wb+') as destination:
+    stored = '/home/denis/Projects/myway/out'
+    with open(stored, 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
+    # md5 = md5(stored)
+    # im = Image.open(stored)        
+    # size = (128, 128)
+    # im.thumbnail(size)
+    # im.save('tumbnail.jpg', 'JPEG')
+    # im.show()
+
+    # in_file = open('tumbnail.jpg', "rb") # opening for [r]eading as [b]inary
+    # data = in_file.read() # if you only wanted to read 512 bytes, do .read(512)
+    # in_file.close()
+
+    # photo = models.Photo(md5 = md5, thumbnail=)
+    # photo.store()
+
+def md5(fname):
+    hash_md5 = hashlib.md5()
+    with open(fname, "rb") as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            hash_md5.update(chunk)
+    return hash_md5.hexdigest()    
+
+def photo_view(request, pk):
+    with open('/home/denis/Projects/myway/out', "rb") as image_file:
+        image_data = base64.b64encode(image_file.read()).decode('utf-8')
+        ctx = {"image":image_data}
+        return render(request, 'index.html', ctx)
+
 

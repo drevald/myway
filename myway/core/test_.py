@@ -1,5 +1,7 @@
+import hashlib
 import unittest
 import base64
+import io
 from django.test import Client
 from django.test import SimpleTestCase
 from django.test import TransactionTestCase
@@ -102,25 +104,24 @@ class SimpleTest(TransactionTestCase):
         # # # print(response.context['objects_list'])
 
 class ImageTest(SimpleTestCase):   
-    #Read image
-    im = Image.open( '/home/denis/Projects/myway/out' )
-    #Display image
-    #im.show()
+    stored = '/home/denis/Projects/myway/out'
+    im = Image.open(stored)
+    md5 = views.md5(stored)
+    print(f"md5 generated {md5}")
+    im = Image.open(stored)        
+    size = (128, 128)
+    im.thumbnail(size)
+    im.save('tumbnail.jpg', 'JPEG')
+    print(f"thmbnail stored")
 
-    print("Applying a filter to the image")
-    im_sharp = im.filter( ImageFilter.SHARPEN )
-    print("Saving the filtered image to a new file")
-    im_sharp.save( 'image_sharpened.jpg', 'JPEG' )
+    in_file = open('tumbnail.jpg', "rb")
+    data = in_file.read()
+    print(f"thmbnail read back")
+    in_file.close()
 
-    print("Splitting the image into its respective bands, i.e. Red, Green,and Blue for RGB")
-    r,g,b = im_sharp.split()
-
-    print("Viewing EXIF data embedded in image")
-    exif_data = im._getexif()
-    try:
-        size = (128, 128)
-        im.thumbnail(size)
-        im.save('tumbnail.jpg', 'JPEG')
-        print (list(im.getdata()))
-    except OSError:
-        print("cannot create thumbnail")        
+    photo = models.Photo(md5 = md5, thumbnail=data)
+    photo.save()
+    print(f"photo stored")
+    print(len(list(photo.thumbnail)))
+    print(hex(list(photo.thumbnail).pop()))
+    photo.delete()
