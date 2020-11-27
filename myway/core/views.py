@@ -184,15 +184,19 @@ def trip_point_object_delete(request, pk):
 
 def object_photo(request, pk):
     if request.method == 'POST':
+        print(request.POST)
         form = forms.UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             handle_uploaded_file(request.FILES['file'])
             return HttpResponseRedirect(reverse('core:object_edit', kwargs={'pk':pk}))
+        else:
+            print(form._errors)
     else:
         form = forms.UploadFileForm()
     return render(request, 'object_photo.html', {'form': form})
 
 def handle_uploaded_file(f):
-    with open('~/out', 'wb+') as destination:
+    with open('/home/denis/Projects/myway/out', 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
+

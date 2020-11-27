@@ -1,10 +1,12 @@
 import unittest
 import base64
 from django.test import Client
+from django.test import SimpleTestCase
 from django.test import TransactionTestCase
 from django.template import RequestContext
 from myway.core import views
 from myway.core import models
+from PIL import Image, ImageFilter
 
 class SimpleTest(TransactionTestCase):
 
@@ -98,3 +100,27 @@ class SimpleTest(TransactionTestCase):
         # response = self.client.post(f'trip/{trip.id}/edit', follw=True)
         # self.assertEqual(response.status_code, 200)
         # # # print(response.context['objects_list'])
+
+class ImageTest(SimpleTestCase):   
+    #Read image
+    im = Image.open( '/home/denis/Projects/myway/out' )
+    #Display image
+    #im.show()
+
+    print("Applying a filter to the image")
+    im_sharp = im.filter( ImageFilter.SHARPEN )
+    print("Saving the filtered image to a new file")
+    im_sharp.save( 'image_sharpened.jpg', 'JPEG' )
+
+    print("Splitting the image into its respective bands, i.e. Red, Green,and Blue for RGB")
+    r,g,b = im_sharp.split()
+
+    print("Viewing EXIF data embedded in image")
+    exif_data = im._getexif()
+    try:
+        size = (128, 128)
+        im.thumbnail(size)
+        im.save('tumbnail.jpg', 'JPEG')
+        print (list(im.getdata()))
+    except OSError:
+        print("cannot create thumbnail")        
