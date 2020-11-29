@@ -1,3 +1,4 @@
+import django
 import hashlib
 import unittest
 import base64
@@ -90,38 +91,19 @@ class SimpleTest(TransactionTestCase):
         response = self.client.post(f'/object/create', data={"name":"Object one", "longitude":55, "latitude":37}, follow = True)
         self.assertEqual(response.status_code, 200)
 
-        #adding show object
-        trip_points = list(models.TripPoint.objects.filter(trip = models.Trip.objects.get(id=trip.id)))
-        trip_point = trip_points.pop()
-        print(f"editing trip {trip.id} point {trip_point.id}")
-        response = self.client.post(f'/trips/{trip.id}/trip_point_edit/{trip_point.id}')
-        self.assertEqual(response.status_code, 200)
-        # # print(response.context['objects_list'])
+class TestStorageTest(SimpleTestCase):
+    data_str = "some test text"
+    file = open('thumbnail.jpg', "rb")
+    image_data = base64.b64encode(file.read()).decode('utf-8')    
+    stored_data = models.Photo(id=1, thumbnail=image_data)
+    stored_data.save()
+    retrieved_data = models.Photo.objects.get(id=1)
+    retrieved_data.thumbnail
+    print(type(retrieved_data.thumbnail))
+    print(type(image_data))
+    print(retrieved_data.thumbnail[1:10])
+    print(image_data[1:10])
+    assert(retrieved_data.thumbnail == image_data)
 
-        # print(f'/trips/{trip.id}/edit')
-        # response = self.client.post(f'trip/{trip.id}/edit', follw=True)
-        # self.assertEqual(response.status_code, 200)
-        # # # print(response.context['objects_list'])
 
-class ImageTest(SimpleTestCase):   
-    stored = '/home/denis/Projects/myway/out'
-    im = Image.open(stored)
-    md5 = views.md5(stored)
-    print(f"md5 generated {md5}")
-    im = Image.open(stored)        
-    size = (128, 128)
-    im.thumbnail(size)
-    im.save('tumbnail.jpg', 'JPEG')
-    print(f"thmbnail stored")
 
-    in_file = open('tumbnail.jpg', "rb")
-    data = in_file.read()
-    print(f"thmbnail read back")
-    in_file.close()
-
-    photo = models.Photo(md5 = md5, thumbnail=data)
-    photo.save()
-    print(f"photo stored")
-    print(len(list(photo.thumbnail)))
-    print(hex(list(photo.thumbnail).pop()))
-    photo.delete()

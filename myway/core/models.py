@@ -1,25 +1,26 @@
 from django.db import models
 from datetime import datetime
 
-class ShowObject(models.Model):
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-    name = models.CharField(max_length = 32)
-
-class ShowPoint(models.Model):
-    latitude = models.FloatField()
-    longitude = models.FloatField()
-    name = models.CharField(max_length=32, null=True, default="Point")
-
 class Photo(models.Model):
-    thumbnail = models.BinaryField(null=False)
+    thumbnail = models.TextField(null=False)
     md5 = models.CharField(max_length = 32, null=False)
     local = models.CharField(max_length = 32)
     remote = models.CharField(max_length = 32)
     # class Meta:
     #     constraints = [
     #         models.Constraint(fields=['md5'], name="md5")
-    #     ]    
+    #     ]   
+
+class ShowObject(models.Model):
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    name = models.CharField(max_length = 32)
+    photo = models.ForeignKey(Photo, on_delete = models.CASCADE, null = True)
+
+class ShowPoint(models.Model):
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    name = models.CharField(max_length=32, null=True, default="Point")
 
 class ShowPointObject(models.Model):
     object = models.ForeignKey(ShowObject, on_delete = models.CASCADE)

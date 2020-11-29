@@ -86,6 +86,12 @@ class ObjectEditView(UpdateView):
     template_name = 'object_edit.html'
     fields = ('name','latitude','longitude')
     success_url = reverse_lazy('core:objects')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        with open('/home/denis/Projects/myway/thumbnail.jpg', "rb") as image_file:
+            image_data = base64.b64encode(image_file.read()).decode('utf-8')
+            context['image']=image_data
+        return context
 
 class PhotosView(ListView):
     model = models.Photo
@@ -190,32 +196,24 @@ def object_photo(request, pk):
         print(request.POST)
         form = forms.UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            handle_uploaded_file(request.FILES['file'])
-            return HttpResponseRedirect(reverse('core:object_edit', kwargs={'pk':pk}))
+            data = handle_uploaded_file(request.FILES['file'])
+            photo = models.Photo(md5 = hash, thumbnail=data)
+            photo.save()
+            object = models.ShowObject.objects.get(id=pk)
+            object.photo = photo
+            object.save()
+            return HttpResponseRedirect(reverse('core:object_photo', kwargs={'pk':pk}))
         else:
             print(form._errors)
     else:
         form = forms.UploadFileForm()
-    return render(request, 'object_photo.html', {'form': form})
-
-def handle_uploaded_file(f):
-    stored = '/home/denis/Projects/myway/out'
-    with open(stored, 'wb+') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
-    # md5 = md5(stored)
-    # im = Image.open(stored)        
-    # size = (128, 128)
-    # im.thumbnail(size)
-    # im.save('tumbnail.jpg', 'JPEG')
-    # im.show()
-
-    # in_file = open('tumbnail.jpg', "rb") # opening for [r]eading as [b]inary
-    # data = in_file.read() # if you only wanted to read 512 bytes, do .read(512)
-    # in_file.close()
-
-    # photo = models.Photo(md5 = md5, thumbnail=)
-    # photo.store()
+        show_object = models.ShowObject.objects.get(id=pk)
+        if show_object.photo is not None:
+            photo = show_object.photo
+            image_data = photo.thumbnail       
+            context = {"image":image_data}
+            return render(request, 'object_photo.html', {'form': form,'pk':pk, 'image':image_data})
+    return render(request, 'object_photo.html', {'form': form,'pk':pk})
 
 def md5(fname):
     hash_md5 = hashlib.md5()
@@ -223,6 +221,23 @@ def md5(fname):
         for chunk in iter(lambda: f.read(4096), b""):
             hash_md5.update(chunk)
     return hash_md5.hexdigest()    
+
+def handle_uploaded_file(f):
+    stored = '/home/denis/Projects/myway/out'
+    with open(stored, 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+    hash = md5(stored)
+    im = Image.open(stored)        
+    size = (360, 240)
+    im.thumbnail(size)
+    im.save('thumbnail.jpg', 'JPEG')
+
+    image_file = open('thumbnail.jpg', "rb") # opening for [r]eading as [b]inary
+    data = base64.b64encode(image_file.read()).decode('utf-8') # if you only wanted to read 512 bytes, do .read(512)
+    image_file.close()
+
+    return data
 
 def photo_view(request, pk):
     with open('/home/denis/Projects/myway/out', "rb") as image_file:
