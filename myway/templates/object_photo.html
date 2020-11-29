@@ -1,6 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load i18n %}
+<script>
+
+function preview(form) {
+    var name = form["file"].value;
+    form["title"].value = name.substring(1 + name.lastIndexOf("\\"), name.lenght);
+//    form.submit();
+}
+
+
+</script>
 <div>
     <div>
         <h1>{% trans "photo Details" %}</h1>            
@@ -13,8 +23,8 @@
         <p><label for="id_title">Title:</label>{{ form.title }}</p>
         <p><label for="id_file">File:</label>{{ form.file }}</p>        
         <input type="button" value='test' onclick='javascript:alert();'>
-        <input type="submit" value='{% trans "Save" %}'>
-        <input type="submit" value='{% trans "Cancel" %}'> 
+        <input type="submit" value='{% trans "Save" %}' name='save'>
+        <input type="submit" value='{% trans "Cancel" %}' name='cancel'> 
     </form>                
 </div>
 

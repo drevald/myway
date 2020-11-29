@@ -202,7 +202,7 @@ def object_photo(request, pk):
             object = models.ShowObject.objects.get(id=pk)
             object.photo = photo
             object.save()
-            return HttpResponseRedirect(reverse('core:object_photo', kwargs={'pk':pk}))
+            return HttpResponseRedirect(reverse('core:object_edit', kwargs={'pk':pk}))
         else:
             print(form._errors)
     else:

@@ -18,5 +18,5 @@ class UploadFileForm(forms.Form):
     #     'onchange': 'name=this.value;this.form["title"].value = value.substring(1 + value.lastIndexOf("\\\\"), value.lenght)'
     #     }))
     #file = forms.FileField()
-    file = forms.FileField(widget=forms.FileInput(attrs={'onchange':'var name=this.value;this.form["title"].value = value.substring(1 + value.lastIndexOf("\\\\"), value.lenght)'}))
+    file = forms.FileField(widget=forms.FileInput(attrs={'onchange':'preview(this.form)'}))
     
