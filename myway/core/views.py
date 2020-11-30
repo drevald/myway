@@ -191,29 +191,46 @@ def trip_point_object_delete(request, pk):
     trip_point_object.delete()
     return HttpResponseRedirect(reverse('core:trip_point_edit', kwargs={'pk':trip_point.id}))    
 
-def object_photo(request, pk):
+def object_photo(request, pk, new_id):
     if request.method == 'POST':
         print(request.POST)
         form = forms.UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            data = handle_uploaded_file(request.FILES['file'])
-            photo = models.Photo(md5 = hash, thumbnail=data)
-            photo.save()
-            object = models.ShowObject.objects.get(id=pk)
-            object.photo = photo
-            object.save()
-            return HttpResponseRedirect(reverse('core:object_edit', kwargs={'pk':pk}))
+            if request.POST.get('save') is not None and new_id != 0:
+                photo = models.Photo.objects.get(id=new_id)    
+                object = models.ShowObject.objects.get(id=pk)
+                object.photo.delete()
+                object.photo = photo
+                object.save()
+                return HttpResponseRedirect(reverse('core:object_edit', kwargs={'pk':pk}))
+            elif request.POST.get('save') is not None:
+                return HttpResponseRedirect(reverse('core:object_edit', kwargs={'pk':pk}))
+            else:
+                data = handle_uploaded_file(request.FILES['file'])
+                photo = models.Photo(md5 = hash, thumbnail=data)
+                photo.save()
+                return HttpResponseRedirect(reverse('core:object_photo', kwargs={'pk':pk,'new_id':photo.id}))
         else:
             print(form._errors)
     else:
         form = forms.UploadFileForm()
         show_object = models.ShowObject.objects.get(id=pk)
-        if show_object.photo is not None:
+        if new_id != 0:
+            photo = models.Photo.objects.get(id=new_id)
+            image_data = photo.thumbnail       
+            context = {"image":image_data}
+            return render(request, 'object_photo.html', {'form': form,'pk':pk, 'image':image_data,'new_id':photo.id})
+        elif show_object.photo is not None:
             photo = show_object.photo
             image_data = photo.thumbnail       
             context = {"image":image_data}
-            return render(request, 'object_photo.html', {'form': form,'pk':pk, 'image':image_data})
-    return render(request, 'object_photo.html', {'form': form,'pk':pk})
+            return render(request, 'object_photo.html', {'form': form,'pk':pk, 'image':image_data,'new_id':photo.id})
+        else:
+            return render(request, 'object_photo.html', {'form': form,'pk':pk, 'new_id':0})
+
+def object_photo_rotate(request, pk, new_id, degree):
+    form = forms.UploadFileForm()
+    return render(request, 'object_photo.html', {'form': form,'pk':pk, 'new_id':new_id})
 
 def md5(fname):
     hash_md5 = hashlib.md5()

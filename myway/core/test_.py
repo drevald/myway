@@ -86,6 +86,9 @@ class SimpleTest(TransactionTestCase):
         self.assertEquals(models.TripPoint.objects.get(id = 1).order, 0)
         self.assertEquals(models.TripPoint.objects.get(id = 3).order, 1)
 
+    def test_object_picture(self):
+
+        reset_sequences = True
         #adding show object
         print("adding sample object")
         response = self.client.post(f'/object/create', data={"name":"Object one", "longitude":55, "latitude":37}, follow = True)

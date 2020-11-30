@@ -31,7 +31,8 @@ urlpatterns = [
     path('object/create', views.ObjectCreateView.as_view(), name = 'object_create'),
     path('object/<pk>/delete', views.ObjectDeleteView.as_view(), name = 'object_delete'),
     path('object/<pk>/edit', views.ObjectEditView.as_view(), name = 'object_edit'),
-    path('object/<pk>/photo', views.object_photo, name = 'object_photo'),
+    path('object/<pk>/photo/<int:new_id>', views.object_photo, name = 'object_photo'),
+    path('object/<pk>/photo/<int:new_id>/rotate/<int:degree>', views.object_photo_rotate, name = 'object_photo_rotate'),
 
     path('photos', views.PhotosView.as_view(), name='photos'),
     path('photo/create', views.PhotoCreateView.as_view(), name = 'photo_create'),
