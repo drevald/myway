@@ -40,7 +40,9 @@ function init () {
             <div>
                 <h1>{% trans "Show Object" %}</h1>            
             </div>
+            {% if image %}
             <img src="data:image/jpg;base64,{{ image }}">
+            {% endif %}
             <form action="" method="post">
                 {% csrf_token %}             
                 {{ form.as_p }}  

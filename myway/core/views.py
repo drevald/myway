@@ -1,5 +1,6 @@
 import base64
 import hashlib
+from io import BytesIO
 from PIL import Image, ImageFilter
 from django.urls import reverse
 from django.urls import reverse_lazy
@@ -88,9 +89,9 @@ class ObjectEditView(UpdateView):
     success_url = reverse_lazy('core:objects')
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        with open('/home/denis/Projects/myway/thumbnail.jpg', "rb") as image_file:
-            image_data = base64.b64encode(image_file.read()).decode('utf-8')
-            context['image']=image_data
+        object = models.ShowObject.objects.get(id=self.kwargs.get('pk'))
+        if object.photo is not None:
+            context['image'] = object.photo.thumbnail
         return context
 
 class PhotosView(ListView):
@@ -203,7 +204,7 @@ def object_photo(request, pk, new_id):
                 object.photo = photo
                 object.save()
                 return HttpResponseRedirect(reverse('core:object_edit', kwargs={'pk':pk}))
-            elif request.POST.get('save') is not None:
+            elif request.POST.get('save') is not None or request.POST.get('cancel') is not None:
                 return HttpResponseRedirect(reverse('core:object_edit', kwargs={'pk':pk}))
             else:
                 data = handle_uploaded_file(request.FILES['file'])
@@ -228,9 +229,28 @@ def object_photo(request, pk, new_id):
         else:
             return render(request, 'object_photo.html', {'form': form,'pk':pk, 'new_id':0})
 
-def object_photo_rotate(request, pk, new_id, degree):
+def object_photo_rotate(request, pk, new_id, degree):   
+    photo = models.Photo.objects.get(id=new_id)    
+    retrieved_data = photo.thumbnail
+    print(retrieved_data[0:10])
+    image_arr = base64.b64decode(retrieved_data)
+    in_memory_file = BytesIO(image_arr)
+    img = Image.open(in_memory_file)
+    img = img.rotate(angle=degree)
+    img.show()
+    img.save('thumbnail.jpg', 'JPEG')
+    file = open('thumbnail.jpg', "rb")
+    image_data = base64.b64encode(file.read()).decode('utf-8') 
+    photo.thumbnail = image_data
+    photo.save()
     form = forms.UploadFileForm()
-    return render(request, 'object_photo.html', {'form': form,'pk':pk, 'new_id':new_id})
+    if new_id != 0:
+        # photo = models.Photo.objects.get(id=new_id)
+        # image_data = photo.thumbnail       
+        context = {"image":image_data}
+        return render(request, 'object_photo.html', {'form': form,'pk':pk, 'image':image_data,'new_id':photo.id})
+    else:
+        return render(request, 'object_photo.html', {'form': form,'pk':pk, 'new_id':0})
 
 def md5(fname):
     hash_md5 = hashlib.md5()
