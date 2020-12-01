@@ -7,10 +7,17 @@
 <table>
 {% for trip in object_list %}
 <tr>
-    <td>{{ trip.name }}</td>
+    <td><h2>{{ trip.name }}</h2></td>
     <td>
         <a href="{% url 'core:trip_delete' trip.id %}">Delete</a>
         <a href="{% url 'core:trip_edit' trip.id %}">Edit</a>
+    </td>    
+</tr>
+<tr>
+    <td colspan=2>
+        {% for trip_point in trip.trip_points %}
+            {{ trip_point.name }}
+        {% endfor %}
     </td>
 </tr>
 {% endfor %}

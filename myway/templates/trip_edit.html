@@ -98,8 +98,7 @@ multiRoute.model.setParams({
             <table>
             {% for trip_point in trip_points %}
             <tr>
-                <td>{{trip_point.trip.id}}</td>
-                <td>{{trip_point.point.id}}</td>
+                <td>{% trans "Point number" %}{{trip_point.order}}</td>
                 <td><a href="{% url 'core:trip_point_delete' trip_point.trip.id trip_point.point.id %}">Delete</a></td>
                 <td><a href="{% url 'core:trip_point_edit' trip_point.id %}">Edit</a></td>                
             </tr>
