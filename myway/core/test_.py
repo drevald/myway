@@ -96,7 +96,7 @@ from PIL import Image, ImageFilter
 
 class ImageTest(TestCase):
  
-    def test_image(self):
+    def test_image_conversion(self):
 
         #test_image_to_db
         file = open('thumbnail.jpg', "rb")
@@ -118,5 +118,12 @@ class ImageTest(TestCase):
         print(image_arr[0:10])
         in_memory_file = io.BytesIO(image_arr)
         img = Image.open(in_memory_file)
-        img.show()
+
+    def test_image_rotation(self):        
+        image = Image.open('thumbnail.jpg')
+        rotated_image = image.rotate(-90, expand=1)
+        assert(image.width == rotated_image.height)
+        assert(image.height == rotated_image.width)
+
+
 

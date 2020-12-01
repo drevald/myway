@@ -22,7 +22,7 @@ function preview(form) {
         <p><label for="id_title">Title:</label>{{ form.title }}</p>
         <p><label for="id_file">File:</label>{{ form.file }}</p>        
         <p>
-            {% comment %} <a href="{% url 'core:object_photo_rotate' pk new_i 0 %}">Rotate Counterclockwise</a> {% endcomment %}
+            <a href="{% url 'core:object_photo_rotate' pk new_id 90 %}">Rotate Counterclockwise</a>
         </p>
         <p>
             <input type="submit" value='{% trans "Save" %}' name='save'>

@@ -200,7 +200,8 @@ def object_photo(request, pk, new_id):
             if request.POST.get('save') is not None and new_id != 0:
                 photo = models.Photo.objects.get(id=new_id)    
                 object = models.ShowObject.objects.get(id=pk)
-                object.photo.delete()
+                if object.photo is not None:
+                    object.photo.delete() 
                 object.photo = photo
                 object.save()
                 return HttpResponseRedirect(reverse('core:object_edit', kwargs={'pk':pk}))
@@ -236,7 +237,7 @@ def object_photo_rotate(request, pk, new_id, degree):
     image_arr = base64.b64decode(retrieved_data)
     in_memory_file = BytesIO(image_arr)
     img = Image.open(in_memory_file)
-    img = img.rotate(angle=degree)
+    img = img.rotate(angle=degree, expand=1)
     img.show()
     img.save('thumbnail.jpg', 'JPEG')
     file = open('thumbnail.jpg', "rb")
@@ -245,12 +246,11 @@ def object_photo_rotate(request, pk, new_id, degree):
     photo.save()
     form = forms.UploadFileForm()
     if new_id != 0:
-        # photo = models.Photo.objects.get(id=new_id)
-        # image_data = photo.thumbnail       
         context = {"image":image_data}
-        return render(request, 'object_photo.html', {'form': form,'pk':pk, 'image':image_data,'new_id':photo.id})
+        return HttpResponseRedirect(reverse('core:object_photo', kwargs={'pk':pk,'new_id':photo.id}))
     else:
-        return render(request, 'object_photo.html', {'form': form,'pk':pk, 'new_id':0})
+        return HttpResponseRedirect(reverse('core:object_photo', kwargs={'pk':pk,'new_id':photo.id}))
+
 
 def md5(fname):
     hash_md5 = hashlib.md5()
