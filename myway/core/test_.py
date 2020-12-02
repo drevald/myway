@@ -94,20 +94,35 @@ class SimpleTest(TransactionTestCase):
         response = self.client.post(f'/object/create', data={"name":"Object one", "longitude":55, "latitude":37}, follow = True)
         self.assertEqual(response.status_code, 200)
         object = list(response.context['objects_list']).pop()
+        self.assertTrue(object.photo is None)
 
-        #making a photo
-        print("making a photo")
         file = open('thumbnail.jpg', "rb")
         image_data = base64.b64encode(file.read()).decode('utf-8')    
         photo = models.Photo(id=1, thumbnail=image_data)
         photo.save()
 
-        print("adding photo to the object")
-        response = self.client.get(f'/object/{object.id}/photo/{photo.id}', follow = True)
-        print(response.context.keys())
-        # updated_object = list(response.context['objects_list']).pop()
-        # print(updated_object.photo.id)
+        file = open('thumbnail.jpg', "rb")
+        image_data = base64.b64encode(file.read()).decode('utf-8')    
+        photo_new = models.Photo(id=2, thumbnail=image_data)
+        photo_new.save()
 
+        print("adding photo to the object")
+        with open('thumbnail.jpg', "rb") as fp:            
+            response = self.client.post(f'/object/{object.id}/photo/1', {"file": fp,"title":"title", "save":"Save"}, follow = True)
+        updated_object = models.ShowObject.objects.get(id = object.id)
+        self.assertTrue(updated_object.photo is not None)
+
+        print("reject to add photo to the object")
+        with open('thumbnail.jpg', "rb") as fp:            
+            response = self.client.post(f'/object/{object.id}/photo/2', {"file": fp,"title":"title", "cancel":"Cancel"}, follow = True)
+        updated_object = models.ShowObject.objects.get(id = object.id)
+        self.assertEqual(updated_object.photo.id, 1)
+
+        print("reject to add photo to the object")
+        with open('thumbnail.jpg', "rb") as fp:            
+            response = self.client.post(f'/object/{object.id}/photo/2', {"file": fp,"title":"title", "save":"Save"}, follow = True)
+        updated_object = models.ShowObject.objects.get(id = object.id)
+        self.assertEqual(updated_object.photo.id, 2)
 
 class ImageTest(TestCase):
  
