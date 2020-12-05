@@ -128,17 +128,10 @@ class TripPointAdd(CreateView):
         self.object.trip = trip
         self.object.order = 1
         return super().form_valid(form)
-    # def get_success_url(self):
-    #     params = {"pk": self.kwargs["pk"]}
-    #     return reverse_lazy("core:trip_edit", kwargs=params)
+    def get_success_url(self):
+        params = {"pk": self.kwargs["pk"]}
+        return reverse_lazy("core:trip_edit", kwargs=params)
         
-# class UserProfileCreateView(CreateView):
-#     def form_valid(self, form):
-#          self.object = form.save(commit=False)
-#          self.object.user = self.request.user
-#          self.object.save()
-#          return super(ModelFormMixin, self).form_valid(form)
-
 def trip_point_delete(request, pk, point_id):
     trip_points = models.TripPoint.objects.filter(trip = models.Trip.objects.get(id = pk))
     trip_point_del = models.TripPoint.objects.get(id = point_id)
