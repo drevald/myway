@@ -24,7 +24,6 @@ class ShowPoint(models.Model):
 
 class ShowPointObject(models.Model):
     object = models.ForeignKey(ShowObject, on_delete = models.CASCADE)
-    point = models.ForeignKey(ShowPoint, on_delete = models.CASCADE)
     photo = models.ForeignKey(Photo, on_delete = models.CASCADE)
 
 class Tag(models.Model):
@@ -56,8 +55,10 @@ class Trip(models.Model):
     name = models.CharField(max_length = 32)
 
 class TripPoint(models.Model):
-    trip = models.ForeignKey(Trip, on_delete = models.CASCADE)
-    point = models.ForeignKey(ShowPoint, on_delete = models.CASCADE)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    name = models.CharField(max_length=32, null=True, default="Point")    
+    trip = models.ForeignKey(Trip, related_name="points", on_delete = models.CASCADE)
     order = models.IntegerField()
     class Meta:
         constraints = [

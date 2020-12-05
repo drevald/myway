@@ -12,7 +12,7 @@ urlpatterns = [
     path('trips/<pk>/delete', views.TripDeleteView.as_view(), name = 'trip_delete'),
     path('trips/<pk>/edit', views.TripEditView.as_view(), name = 'trip_edit'),
     
-    path('trips/<pk>/trip_point_add/<int:point_id>', views.trip_point_add, name = 'trip_point_add'),
+    path('trips/<pk>/trip_point_add', views.TripPointAdd.as_view(), name = 'trip_point_add'),
     path('trips/<pk>/trip_point_delete/<int:point_id>', views.trip_point_delete, name = 'trip_point_delete'),
     path('trips/<pk>/trip_point_up/<int:point_id>', views.trip_point_up, name = 'trip_point_up'),
     path('trips/<pk>/trip_point_down/<int:point_id>', views.trip_point_down, name = 'trip_point_down'),

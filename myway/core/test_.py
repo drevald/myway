@@ -118,7 +118,7 @@ class SimpleTest(TransactionTestCase):
         updated_object = models.ShowObject.objects.get(id = object.id)
         self.assertEqual(updated_object.photo.id, 1)
 
-        print("reject to add photo to the object")
+        print("add photo to the object")
         with open('thumbnail.jpg', "rb") as fp:            
             response = self.client.post(f'/object/{object.id}/photo/2', {"file": fp,"title":"title", "save":"Save"}, follow = True)
         updated_object = models.ShowObject.objects.get(id = object.id)

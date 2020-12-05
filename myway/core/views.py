@@ -10,6 +10,7 @@ from django.views.generic import ListView
 from django.views.generic.edit import CreateView
 from django.views.generic.edit import DeleteView
 from django.views.generic.edit import UpdateView
+from django.views.generic.edit import ModelFormMixin
 from django.http import HttpResponseRedirect
 from . import models
 from . import forms
@@ -116,20 +117,31 @@ class PhotoEditView(UpdateView):
     fields = '__all__'
     success_url = reverse_lazy('core:photos')
 
-def trip_point_add(request, pk, point_id):
-    trip_points = models.TripPoint.objects.filter(trip = models.Trip.objects.get(id = pk))
-    trip_point = models.TripPoint(
-        trip = models.Trip.objects.get(id = pk),
-        point = models.ShowPoint.objects.get(id = point_id),
-        order = len(list(trip_points)))
-    trip_point.save()
-    return HttpResponseRedirect(reverse('core:trip_edit', kwargs={'pk':pk}))
+class TripPointAdd(CreateView):
+    model = models.TripPoint
+    template_name = 'trip_point_new.html'
+    fields = ('latitude','longitude','name')
+    success_url = reverse_lazy('core:trip_edit')
+    def form_valid(self, form):
+        trip = models.Trip.objects.get(id = self.kwargs.get('pk'))
+        self.object = form.save(commit = False)        
+        self.object.trip = trip
+        self.object.order = 1
+        return super().form_valid(form)
+    # def get_success_url(self):
+    #     params = {"pk": self.kwargs["pk"]}
+    #     return reverse_lazy("core:trip_edit", kwargs=params)
+        
+# class UserProfileCreateView(CreateView):
+#     def form_valid(self, form):
+#          self.object = form.save(commit=False)
+#          self.object.user = self.request.user
+#          self.object.save()
+#          return super(ModelFormMixin, self).form_valid(form)
 
 def trip_point_delete(request, pk, point_id):
     trip_points = models.TripPoint.objects.filter(trip = models.Trip.objects.get(id = pk))
-    trip_point_del = models.TripPoint.objects.get(
-        trip = models.Trip.objects.get(id = pk),
-        point = models.ShowPoint.objects.get(id = point_id))
+    trip_point_del = models.TripPoint.objects.get(id = point_id)
     for trip_point in trip_points:
         if trip_point.order > trip_point_del.order:
             trip_point.order = trip_point.order - 1
@@ -139,9 +151,7 @@ def trip_point_delete(request, pk, point_id):
 
 def trip_point_up(request, pk, point_id):
     trip_points = models.TripPoint.objects.filter(trip = models.Trip.objects.get(id = pk))
-    trip_point_mov = models.TripPoint.objects.get(
-        trip = models.Trip.objects.get(id = pk),
-        point = models.ShowPoint.objects.get(id = point_id))
+    trip_point_mov = models.TripPoint.objects.get(id = point_id)
     for trip_point in trip_points:
         if trip_point.order == trip_point_mov.order + 1:
             trip_point.order = trip_point.order - 1
@@ -153,9 +163,7 @@ def trip_point_up(request, pk, point_id):
 
 def trip_point_down(request, pk, point_id):
     trip_points = models.TripPoint.objects.filter(trip = models.Trip.objects.get(id = pk))
-    trip_point_mov = models.TripPoint.objects.get(
-        trip = models.Trip.objects.get(id = pk),
-        point = models.ShowPoint.objects.get(id = point_id))
+    trip_point_mov = models.TripPoint.objects.get(id = point_id)
     for trip_point in trip_points:
         if trip_point.order == trip_point_mov.order - 1:
             trip_point.order = trip_point.order + 1

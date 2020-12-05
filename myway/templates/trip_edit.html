@@ -20,7 +20,6 @@ var points = new ymaps.GeoObjectCollection({}, {
     preset: "islands#blackStretchyIcon",
 });
 
-
 {% for point in points %}
 
     ShowPoint{{point.id}} = new ymaps.GeoObject({
@@ -84,6 +83,20 @@ multiRoute.model.setParams({
 
 }
 
+
+function setPoint() {
+
+    alert(myMap.getCenter());
+
+    point = new ymaps.Placemark(myMap.getCenter(), {
+        }, {
+            preset: 'islands#violetDotIconWithCaption',
+            draggable: true
+        });
+
+    myMap.geoObjects.add(point);
+
+}
 </script>
 <table>
     <tr>
@@ -94,29 +107,31 @@ multiRoute.model.setParams({
         <form action="" method="post">
             {% csrf_token %}             
             {{ form.as_p }}
-            <p><label>Points:</label> </p>
+            {% if trip_points|length > 0 %}
             <table>
+            <tr><td><label>Points:</label></td></tr>
             {% for trip_point in trip_points %}
             <tr>
                 <td>{% trans "Point number" %}{{trip_point.order}}</td>
-                <td><a href="{% url 'core:trip_point_delete' trip_point.trip.id trip_point.point.id %}">Delete</a></td>
+                <td><a href="{% url 'core:trip_point_delete' trip_point.trip.id trip_point.id %}">Delete</a></td>
                 <td><a href="{% url 'core:trip_point_edit' trip_point.id %}">Edit</a></td>                
             </tr>
             {% endfor %}
-            <tr>
-                <td colspan="3">
-                    <input type="button" value="Add">
+            </table>
+            {% else %}
+            <p>{% trans "Where should I start?" %}</p>
+            <p><input></p>
+            <p><input type="button" value="search"></p>
+            {% endif %}            
+            <p>
+                <a href="{% url 'core:trip_point_add' trip.id %}">Add point</a>
                     <input type="button" value="Preview">
                     <input type="button" value="Hide">
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3">
+            </p>
+            <p>
                     <input type="submit" value='{% trans "Save" %}'>
                     <input type="submit" value='{% trans "Cancel" %}'> 
-                </td>
-            </tr>
-            </table>
+            </p>
         </form>                
         </td>
         <td>
@@ -124,5 +139,7 @@ multiRoute.model.setParams({
         </td>
     </tr>
 </table>
+
+
 
 {% endblock %}
