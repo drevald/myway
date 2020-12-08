@@ -20,7 +20,7 @@ var points = new ymaps.GeoObjectCollection({}, {
     preset: "islands#blackStretchyIcon",
 });
 
-{% comment %} {% for point in object.points %}
+{% for point in object.points.all %}
 
     ShowPoint{{point.id}} = new ymaps.GeoObject({
         geometry: {type: "Point",coordinates: [{{ point.latitude }}, {{ point.longitude }}]},
@@ -40,7 +40,7 @@ var points = new ymaps.GeoObjectCollection({}, {
     ); 
     points.add(ShowPoint{{point.id}});
 
-{% endfor %} {% endcomment %}
+{% endfor %}
 
     myMap.geoObjects.add(points);
 
@@ -66,9 +66,9 @@ var points = new ymaps.GeoObjectCollection({}, {
 
     multiRoute = new ymaps.multiRouter.MultiRoute({
         referencePoints: [
-        {% comment %} {% for point in object.points %}
-            [{{point.latitude}},{{point.longitude}}],
-        {% endfor %} {% endcomment %}
+{% for point in object.points.all %}
+    [{{point.latitude}},{{point.longitude}}],
+{% endfor %}
             ],
             params: {
 
@@ -107,17 +107,15 @@ function setPoint() {
         <form action="" method="post">
             {% csrf_token %}             
             {{ form.as_p }}
-            {% if object.points|length > 0 %}
+            {% if object.points.all|length > 0 %}
             <table>
             <tr><td><label>Points:</label></td></tr>
-            {% for trip_point in object.points %}
+            {% for point in object.points.all %}
             <tr>
                 <td>{% trans "Point number" %}{{trip_point.order}}</td>
-                <td>&nbsp;{{trip_point.latitude}}&nbsp;</td>
-                <td>&nbsp;{{trip_point.longitude}}&nbsp;</td>
-                <td><a href="{% url 'core:trip_point_delete' trip_point.trip.id trip_point.id %}">Delete</a></td>
-                <td><a href="{% url 'core:trip_point_edit' trip_point.id %}">Edit</a></td>                
-                <td><a href="{% url 'core:trip_point_objects' trip_point.id %}">Edit Objects</a></td> 
+                <td><a href="{% url 'core:trip_point_delete' point.trip.id point.id %}">Delete</a></td>
+                <td><a href="{% url 'core:trip_point_edit' point.id %}">Edit</a></td>                
+                <td><a href="{% url 'core:trip_point_objects' point.id %}">Edit Objects</a></td> 
             </tr>
             {% endfor %}
             </table>
@@ -141,6 +139,8 @@ function setPoint() {
             <div id="map" style="width: 640;height: 480;"/>
         </td>
     </tr>
-</table> 
+</table>
+
+
 
 {% endblock %}

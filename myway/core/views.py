@@ -39,6 +39,11 @@ class TripEditView(UpdateView):
     template_name = 'trip_edit.html'
     fields = ('name',)
     success_url = reverse_lazy('core:trips')     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['points'] = models.ShowPoint.objects.all()
+        context['trip_points'] = models.TripPoint.objects.all()
+        return context
         
 class PointsView(ListView):
     model = models.ShowPoint
@@ -164,7 +169,7 @@ class TripPointAddView(CreateView):
 
 class TripPointEditView(UpdateView):
     model = models.TripPoint
-    template_name = 'trip_point_new.html'
+    template_name = 'trip_point_edit.html'
     fields = ('latitude','longitude','name')
     success_url = reverse_lazy('core:trip_edit')
     def form_valid(self, form):
