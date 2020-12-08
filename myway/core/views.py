@@ -39,12 +39,7 @@ class TripEditView(UpdateView):
     template_name = 'trip_edit.html'
     fields = ('name',)
     success_url = reverse_lazy('core:trips')     
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['points'] = models.ShowPoint.objects.all()
-        context['trip_points'] = models.TripPoint.objects.all()
-        return context
-
+        
 class PointsView(ListView):
     model = models.ShowPoint
     template_name = 'points.html'
@@ -117,21 +112,6 @@ class PhotoEditView(UpdateView):
     fields = '__all__'
     success_url = reverse_lazy('core:photos')
 
-class TripPointAdd(CreateView):
-    model = models.TripPoint
-    template_name = 'trip_point_new.html'
-    fields = ('latitude','longitude','name')
-    success_url = reverse_lazy('core:trip_edit')
-    def form_valid(self, form):
-        trip = models.Trip.objects.get(id = self.kwargs.get('pk'))
-        self.object = form.save(commit = False)        
-        self.object.trip = trip
-        self.object.order = 1
-        return super().form_valid(form)
-    def get_success_url(self):
-        params = {"pk": self.kwargs["pk"]}
-        return reverse_lazy("core:trip_edit", kwargs=params)
-        
 def trip_point_delete(request, pk, point_id):
     trip_points = models.TripPoint.objects.filter(trip = models.Trip.objects.get(id = pk))
     trip_point_del = models.TripPoint.objects.get(id = point_id)
@@ -166,10 +146,42 @@ def trip_point_down(request, pk, point_id):
             break
     return HttpResponseRedirect(reverse('core:trip_edit', kwargs={'pk':pk}))      
 
+class TripPointAddView(CreateView):
+    print("TRIP POINT ADD VIEW")
+    model = models.TripPoint
+    template_name = 'trip_point_new.html'
+    fields = ('latitude','longitude','name')
+    success_url = reverse_lazy('core:trip_edit')
+    def form_valid(self, form):
+        trip = models.Trip.objects.get(id = self.kwargs.get('pk'))
+        self.object = form.save(commit = False)        
+        self.object.trip = trip
+        self.object.order = 1
+        return super().form_valid(form)
+    def get_success_url(self):
+        params = {"pk": self.kwargs["pk"]}
+        return reverse_lazy("core:trip_edit", kwargs=params)
+
 class TripPointEditView(UpdateView):
     model = models.TripPoint
-    template_name = 'trip_point_edit.html'
-    fields = ()
+    template_name = 'trip_point_new.html'
+    fields = ('latitude','longitude','name')
+    success_url = reverse_lazy('core:trip_edit')
+    def form_valid(self, form):
+        point = models.TripPoint.objects.get(id = self.kwargs.get('pk'))
+        self.object = form.save(commit = False)        
+        self.object.trip = point.trip
+        self.object.order = 1
+        return super().form_valid(form)
+    def get_success_url(self):
+        point = models.TripPoint.objects.get(id = self.kwargs.get('pk'))
+        params = {"pk": point.trip.id}
+        return reverse_lazy("core:trip_edit", kwargs=params)
+
+class TripPointObjectsView(ListView):
+    model = models.TripPoint
+    template_name = 'trip_point_objects.html'
+    fields = ('latitude','longitude','name')
     def get_success_url(self):
         trip_point = models.TripPoint.objects.get(id=self.kwargs.get('pk'))
         return reverse_lazy('core:trip_edit', kwargs={'pk':trip_point.trip.id})
@@ -180,18 +192,25 @@ class TripPointEditView(UpdateView):
         context['trip_point_objects'] = models.TripPointObject.objects.filter(trip_point=context['trip_point'])
         return context
 
+# def trip_point_objects(request, pk):
+#     # trip_point_object = models.TripPointObject(
+#     # trip_point = models.TripPoint.objects.get(id = pk),
+#     # object = models.ShowObject.objects.get(id = object_id))
+#     # trip_point_object.save()
+#     return HttpResponseRedirect(reverse('core:trip_point_objects', kwargs={'pk':pk}))
+
 def trip_point_object_add(request, pk, object_id):
     trip_point_object = models.TripPointObject(
     trip_point = models.TripPoint.objects.get(id = pk),
     object = models.ShowObject.objects.get(id = object_id))
     trip_point_object.save()
-    return HttpResponseRedirect(reverse('core:trip_point_edit', kwargs={'pk':pk}))
+    return HttpResponseRedirect(reverse('core:trip_point_objects', kwargs={'pk':pk}))
 
 def trip_point_object_delete(request, pk):
-    trip_point_object = models.TripPointObject.get(id = pk)
+    trip_point_object = models.TripPointObject.objects.get(id = pk)
     trip_point = trip_point_object.trip_point
     trip_point_object.delete()
-    return HttpResponseRedirect(reverse('core:trip_point_edit', kwargs={'pk':trip_point.id}))    
+    return HttpResponseRedirect(reverse('core:trip_point_objects', kwargs={'pk':trip_point.id}))    
 
 def object_photo(request, pk, new_id):
     if request.method == 'POST':
