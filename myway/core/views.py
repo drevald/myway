@@ -11,6 +11,7 @@ from django.views.generic.edit import CreateView
 from django.views.generic.edit import DeleteView
 from django.views.generic.edit import UpdateView
 from django.views.generic.edit import ModelFormMixin
+from django.views.generic.detail import DetailView
 from django.http import HttpResponseRedirect
 from . import models
 from . import forms
@@ -117,19 +118,19 @@ class PhotoEditView(UpdateView):
     fields = '__all__'
     success_url = reverse_lazy('core:photos')
 
-def trip_point_delete(request, pk, point_id):
-    trip_points = models.TripPoint.objects.filter(trip = models.Trip.objects.get(id = pk))
-    trip_point_del = models.TripPoint.objects.get(id = point_id)
+def trip_point_delete(request, trip_id, pk):
+    trip_points = models.TripPoint.objects.filter(trip = models.Trip.objects.get(id = trip_id))
+    trip_point_del = models.TripPoint.objects.get(id = pk)
     for trip_point in trip_points:
         if trip_point.order > trip_point_del.order:
             trip_point.order = trip_point.order - 1
             trip_point.save()
     trip_point_del.delete()
-    return HttpResponseRedirect(reverse('core:trip_edit', kwargs={'pk':pk}))    
+    return HttpResponseRedirect(reverse('core:trip_edit', kwargs={'pk':trip_id}))    
 
-def trip_point_up(request, pk, point_id):
-    trip_points = models.TripPoint.objects.filter(trip = models.Trip.objects.get(id = pk))
-    trip_point_mov = models.TripPoint.objects.get(id = point_id)
+def trip_point_up(request, trip_id, pk):
+    trip_points = models.TripPoint.objects.filter(trip = models.Trip.objects.get(id = trip_id))
+    trip_point_mov = models.TripPoint.objects.get(id = pk)
     for trip_point in trip_points:
         if trip_point.order == trip_point_mov.order + 1:
             trip_point.order = trip_point.order - 1
@@ -137,11 +138,11 @@ def trip_point_up(request, pk, point_id):
             trip_point.save()
             trip_point_mov.save()
             break
-    return HttpResponseRedirect(reverse('core:trip_edit', kwargs={'pk':pk}))       
+    return HttpResponseRedirect(reverse('core:trip_edit', kwargs={'pk':trip_id}))       
 
-def trip_point_down(request, pk, point_id):
-    trip_points = models.TripPoint.objects.filter(trip = models.Trip.objects.get(id = pk))
-    trip_point_mov = models.TripPoint.objects.get(id = point_id)
+def trip_point_down(request, trip_id, pk):
+    trip_points = models.TripPoint.objects.filter(trip = models.Trip.objects.get(id = trip_id))
+    trip_point_mov = models.TripPoint.objects.get(id = pk)
     for trip_point in trip_points:
         if trip_point.order == trip_point_mov.order - 1:
             trip_point.order = trip_point.order + 1
@@ -149,7 +150,7 @@ def trip_point_down(request, pk, point_id):
             trip_point.save()
             trip_point_mov.save()
             break
-    return HttpResponseRedirect(reverse('core:trip_edit', kwargs={'pk':pk}))      
+    return HttpResponseRedirect(reverse('core:trip_edit', kwargs={'pk':trip_id}))      
 
 class TripPointAddView(CreateView):
     print("TRIP POINT ADD VIEW")
@@ -183,18 +184,14 @@ class TripPointEditView(UpdateView):
         params = {"pk": point.trip.id}
         return reverse_lazy("core:trip_edit", kwargs=params)
 
-class TripPointObjectsView(ListView):
+class TripPointObjectsView(DetailView):
     model = models.TripPoint
     template_name = 'trip_point_objects.html'
-    fields = ('latitude','longitude','name')
     def get_success_url(self):
-        trip_point = models.TripPoint.objects.get(id=self.kwargs.get('pk'))
-        return reverse_lazy('core:trip_edit', kwargs={'pk':trip_point.trip.id})
+        return reverse_lazy('core:trip_edit', kwargs={'pk':trip_id})
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['objects'] = models.ShowObject.objects.all()
-        context['trip_point'] = models.TripPoint.objects.get(id=self.kwargs.get('pk'))
-        context['trip_point_objects'] = models.TripPointObject.objects.filter(trip_point=context['trip_point'])
         return context
 
 # def trip_point_objects(request, pk):
@@ -204,28 +201,29 @@ class TripPointObjectsView(ListView):
 #     # trip_point_object.save()
 #     return HttpResponseRedirect(reverse('core:trip_point_objects', kwargs={'pk':pk}))
 
-def trip_point_object_add(request, pk, object_id):
+def trip_point_object_add(request, trip_id, point_id, object_id):
     trip_point_object = models.TripPointObject(
-    trip_point = models.TripPoint.objects.get(id = pk),
-    object = models.ShowObject.objects.get(id = object_id))
+        trip_point = models.TripPoint.objects.get(id = point_id),
+        object = models.ShowObject.objects.get(id = object_id))
     trip_point_object.save()
-    return HttpResponseRedirect(reverse('core:trip_point_objects', kwargs={'pk':pk}))
+    return HttpResponseRedirect(reverse('core:trip_point_objects', kwargs={'trip_id':trip_id, 'pk':point_id}))
 
-def trip_point_object_delete(request, pk):
-    trip_point_object = models.TripPointObject.objects.get(id = pk)
-    trip_point = trip_point_object.trip_point
+def trip_point_object_delete(request, trip_id, point_id, object_id):
+    trip_point_object = models.TripPointObject.objects.filter(
+        trip_point = models.TripPoint.objects.get(id = point_id),
+        object = models.ShowObject.objects.get(id = object_id),
+    ).first()
     trip_point_object.delete()
-    return HttpResponseRedirect(reverse('core:trip_point_objects', kwargs={'pk':trip_point.id}))    
+    return HttpResponseRedirect(reverse('core:trip_point_objects', kwargs={'trip_id':trip_id, 'pk':point_id}))    
 
 def object_photo(request, pk, new_id):
     if request.method == 'POST':
-        print(request.POST)
         form = forms.UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             if request.POST.get('save') is not None and new_id != 0:
                 photo = models.Photo.objects.get(id=new_id)    
                 object = models.ShowObject.objects.get(id=pk)
-                if object.photo is not None:
+                if object.photo is not None and object.photo.id != photo.id:
                     object.photo.delete() 
                 object.photo = photo
                 object.save()
@@ -263,7 +261,6 @@ def object_photo_rotate(request, pk, new_id, degree):
     in_memory_file = BytesIO(image_arr)
     img = Image.open(in_memory_file)
     img = img.rotate(angle=degree, expand=1)
-    img.show()
     img.save('thumbnail.jpg', 'JPEG')
     file = open('thumbnail.jpg', "rb")
     image_data = base64.b64encode(file.read()).decode('utf-8') 

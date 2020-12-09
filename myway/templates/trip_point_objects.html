@@ -2,7 +2,7 @@
 {% block content %}
 {% load i18n %}
 <div>
-    <h1>{% trans "Trip Point " %}{{trip_point.order}}</h1>            
+    <h1>{% trans "Trip Point " %}</h1>            
 </div>
 <table width="100%%">
     <tr>
@@ -12,26 +12,26 @@
                 {{ form.as_p }}
                 <p><label>{% trans "Objects:" %}</label> </p>
                 <table>
-                    {% for trip_point_object in trip_point_objects %}
+                {% for trip_point_object in object.show_objects.all %}
                     <tr>
                         <td>{{trip_point_object.object.name}}</td>
-                        <td><a href="{% url 'core:trip_point_object_delete' trip_point_object.id %}">{% trans ">>" %}</a></td>
+                        <td><a href="{% url 'core:trip_point_object_delete' trip_point_object.trip_point.trip.id trip_point_object.trip_point.id trip_point_object.object.id %}">{% trans ">>" %}</a></td>
                     </tr>
                 {% endfor %}
                 </table>
-                <a href="{% url 'core:trip_edit' trip_point.trip.id %}">{% trans "Back" %}</a>
+                <a href="{% url 'core:trip_edit' object.trip.id %}">{% trans "Back" %}</a>
             </form>                
         </td>
         <td valign="top">
             <p><label>{% trans "Objects near by:" %}</label> </p>
             <table>
-                {% for object in objects %}
+                {% for show_object in objects.all %}
                     <tr>
-                        <td><a href="{% url 'core:trip_point_object_add' trip_point.id object.id %}">{% trans "<<" %}</a></td><td>{{object.name}}</td>
+                        <td><a href="{% url 'core:trip_point_object_add' object.trip.id object.id show_object.id %}">{% trans "<<" %}</a></td><td>{{show_object.name}}</td>
                     </tr>
                 {% endfor %}        
             </table>
         </td>
     </tr>
-</table>
+</table> 
 {% endblock %}

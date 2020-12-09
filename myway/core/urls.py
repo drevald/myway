@@ -12,32 +12,21 @@ urlpatterns = [
     path('trips/<pk>/delete', views.TripDeleteView.as_view(), name = 'trip_delete'),
     path('trips/<pk>/edit', views.TripEditView.as_view(), name = 'trip_edit'),
     
-    path('trips/<pk>/trip_point_add', views.TripPointAddView.as_view(), name = 'trip_point_add'),
-    path('trips/<pk>/trip_point_delete/<int:point_id>', views.trip_point_delete, name = 'trip_point_delete'),
-    path('trips/<pk>/trip_point_up/<int:point_id>', views.trip_point_up, name = 'trip_point_up'),
-    path('trips/<pk>/trip_point_down/<int:point_id>', views.trip_point_down, name = 'trip_point_down'),
-
-    path('trip_points/<pk>/edit', views.TripPointEditView.as_view(), name = 'trip_point_edit'),
-    path('trip_point/<pk>/objects', views.TripPointObjectsView.as_view(), name = 'trip_point_objects'),
-    path('trip_point/<pk>/object_add/<int:object_id>', views.trip_point_object_add, name = 'trip_point_object_add'),
-    path('trip_point_objects/<pk>/delete', views.trip_point_object_delete, name = 'trip_point_object_delete'),
-
-    path('points', views.PointsView.as_view(), name='points'),
-    path('point/create', views.PointCreateView.as_view(), name = 'point_create'),
-    path('point/<pk>/delete', views.PointDeleteView.as_view(), name = 'point_delete'),
-    path('point/<pk>/edit', views.PointEditView.as_view(), name = 'point_edit'),
+    path('trips/<pk>/points/add', views.TripPointAddView.as_view(), name = 'trip_point_add'),
+    path('trips/<int:trip_id>/points/<pk>/edit', views.TripPointEditView.as_view(), name = 'trip_point_edit'),
+    path('trips/<int:trip_id>/points/<pk>/up', views.trip_point_up, name = 'trip_point_up'),
+    path('trips/<int:trip_id>/points/<pk>/down', views.trip_point_down, name = 'trip_point_down'),
+    path('trips/<int:trip_id>/points/<pk>/delete', views.trip_point_delete, name = 'trip_point_delete'),
 
     path('objects', views.ObjectsView.as_view(), name='objects'),
-    path('object/create', views.ObjectCreateView.as_view(), name = 'object_create'),
+    path('objects/create', views.ObjectCreateView.as_view(), name = 'object_create'),
     path('object/<pk>/delete', views.ObjectDeleteView.as_view(), name = 'object_delete'),
     path('object/<pk>/edit', views.ObjectEditView.as_view(), name = 'object_edit'),
     path('object/<pk>/photo/<int:new_id>', views.object_photo, name = 'object_photo'),
     path('object/<pk>/photo/<int:new_id>/rotate/<int:degree>', views.object_photo_rotate, name = 'object_photo_rotate'),
 
-    path('photos', views.PhotosView.as_view(), name='photos'),
-    path('photo/create', views.PhotoCreateView.as_view(), name = 'photo_create'),
-    path('photo/<pk>/delete', views.PhotoDeleteView.as_view(), name = 'photo_delete'),
-    path('photo/<pk>/edit', views.PhotoEditView.as_view(), name = 'photo_edit'),
-    path('photo/<pk>/view', views.photo_view, name = 'photo_view')
+    path('trips/<int:trip_id>/points/<pk>/objects', views.TripPointObjectsView.as_view(), name = 'trip_point_objects'),
+    path('trips/<int:trip_id>/points/<int:point_id>/objects/<int:object_id>/add', views.trip_point_object_add, name = 'trip_point_object_add'),
+    path('trips/<int:trip_id>/points/<int:point_id>/objects/<int:object_id>/delete', views.trip_point_object_delete, name = 'trip_point_object_delete'),
 
 ]

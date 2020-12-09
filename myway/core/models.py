@@ -66,7 +66,7 @@ class TripPoint(models.Model):
         ]
 
 class TripPointObject(models.Model):
-    trip_point = models.ForeignKey(TripPoint, on_delete = models.CASCADE)
+    trip_point = models.ForeignKey(TripPoint, related_name="show_objects", on_delete = models.CASCADE)
     object = models.ForeignKey(ShowObject, on_delete=models.CASCADE)
     class Meta:
         constraints = [

@@ -28,132 +28,97 @@ class SimpleTest(TransactionTestCase):
         
         #trip creation            
         response = self.client.post("/trips/create", data={"name": "Trip One"}, follow = True)
+        self.assertEqual(response.status_code, 200) 
+
+        #trip name change            
+        response = self.client.post("/trips/1/edit", data={"name": "Trip One Edited"}, follow = True)
         self.assertEqual(response.status_code, 200)
-        trips = response.context['object_list']
-        self.assertEqual(1, len(trips))
-        trip = list(trips).pop()
-        print(trip.id)
-        
-        # #3 points creation
-        # response = self.client.post("/point/create", data={"longitude": 55.0, "latitude":37, "name":"noname"}, follow = True)
-        # response = self.client.post("/point/create", data={"longitude": 55.0, "latitude":37, "name":"noname"}, follow = True)
-        # response = self.client.post("/point/create", data={"longitude": 55.0, "latitude":37, "name":"noname"}, follow = True)
-        # self.assertEqual(response.status_code, 200)
-        # points = response.context['object_list']
-        # self.assertEqual(3, len(points))
-        # point = list(points).pop()
-        # print(f"point.id={point.id} trip.id={trip.id}")
+        self.assertEqual("Trip One Edited", list(response.context['object_list']).pop().name)
 
-        #3 trip points creation
-        # print("adding all 3 points to trip")
-        # for point in points:
-        #     response = self.client.post(f'/trips/{trip.id}/trip_point_add/{point.id}', follow = True)
-        # trip_points = response.context['trip_points']
-        # for trip_point in trip_points:
-        #     print(f"id={trip_point.id} order={trip_point.order}")
-        # self.assertEquals(models.TripPoint.objects.get(id = 1).order, 0)
-        # self.assertEquals(models.TripPoint.objects.get(id = 2).order, 1)
-        # self.assertEquals(models.TripPoint.objects.get(id = 3).order, 2)
-
-        # #point down
-        # print("moving down point with id = 2")
-        # response = self.client.post(f'/trips/{trip.id}/trip_point_down/2', follow = True)
-        # trip_points = response.context['trip_points']
-        # for trip_point in trip_points:
-        #     print(f"id={trip_point.id} order={trip_point.order}")          
-        # self.assertEquals(models.TripPoint.objects.get(id = 2).order, 0)
-        # self.assertEquals(models.TripPoint.objects.get(id = 1).order, 1)
-        # self.assertEquals(models.TripPoint.objects.get(id = 3).order, 2)
-
-        # #point up
-        # print("moving up point with id = 2")
-        # response = self.client.post(f'/trips/{trip.id}/trip_point_up/2', follow = True)
-        # trip_points = response.context['trip_points']
-        # for trip_point in trip_points:
-        #     print(f"id={trip_point.id} order={trip_point.order}")                 
-        # self.assertEquals(models.TripPoint.objects.get(id = 1).order, 0)
-        # self.assertEquals(models.TripPoint.objects.get(id = 2).order, 1)
-        # self.assertEquals(models.TripPoint.objects.get(id = 3).order, 2)
-
-        # #point deletion
-        # print("deleting point with id = 2")
-        # response = self.client.post(f'/trips/{trip.id}/trip_point_delete/2', follow = True)
-        # trip_points = response.context['trip_points']
-        # self.assertEquals(len(trip_points), 2)
-        # for trip_point in trip_points:
-        #     print(f"id={trip_point.id} order={trip_point.order}")
-        # self.assertEquals(len(list(models.TripPoint.objects.filter(trip = models.Trip.objects.get(id=trip.id)))), 2)
-        # self.assertEquals(models.TripPoint.objects.get(id = 1).order, 0)
-        # self.assertEquals(models.TripPoint.objects.get(id = 3).order, 1)
-
-    def test_object_picture(self):
-
-        reset_sequences = True
-        #adding show object
-        print("adding sample object")
-        response = self.client.post(f'/object/create', data={"name":"Object one", "longitude":55, "latitude":37}, follow = True)
+        #adding points to the trip
+        response = self.client.post("/trips/1/points/add", data={"longitude":55, "latitude":37, "name":"Point 1"}, follow = True)        
+        response = self.client.post("/trips/1/points/add", data={"longitude":55, "latitude":34, "name":"Point 2"}, follow = True)                
+        response = self.client.post("/trips/1/points/add", data={"longitude":55, "latitude":31, "name":"Point 3"}, follow = True)                        
         self.assertEqual(response.status_code, 200)
-        object = list(response.context['objects_list']).pop()
-        self.assertTrue(object.photo is None)
+        self.assertEqual(len(list(response.context['object'].points.all())), 3)
 
-        file = open('thumbnail.jpg', "rb")
-        image_data = base64.b64encode(file.read()).decode('utf-8')    
-        photo = models.Photo(id=1, thumbnail=image_data)
-        photo.save()
+        #edit trip point
+        response = self.client.post("/trips/1/points/1/edit", data={"longitude":56, "latitude":36, "name":"Point Edited"}, follow = True)        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual("Point Edited", response.context['object'].points.get(id=1).name)
 
-        file = open('thumbnail.jpg', "rb")
-        image_data = base64.b64encode(file.read()).decode('utf-8')    
-        photo_new = models.Photo(id=2, thumbnail=image_data)
-        photo_new.save()
+        #moving trip points
+        response = self.client.get("/trips/1/points/2/up", follow = True)        
+        self.assertEqual(response.status_code, 200)
+        # print(list(response.context['object'].points.order.all()))
+        response = self.client.get("/trips/1/points/1/down", follow = True)        
+        self.assertEqual(response.status_code, 200)
+        # print(list(response.context['object'].points.order.all()))
 
-        print("adding photo to the object")
-        with open('thumbnail.jpg', "rb") as fp:            
-            response = self.client.post(f'/object/{object.id}/photo/1', {"file": fp,"title":"title", "save":"Save"}, follow = True)
-        updated_object = models.ShowObject.objects.get(id = object.id)
-        self.assertTrue(updated_object.photo is not None)
+        #delete trip point
+        response = self.client.post("/trips/1/points/3/delete", follow = True)
+        self.assertEqual(len(list(response.context['object'].points.all())), 2)
+        self.assertEqual(response.status_code, 200)
 
-        print("reject to add photo to the object")
-        with open('thumbnail.jpg', "rb") as fp:            
-            response = self.client.post(f'/object/{object.id}/photo/2', {"file": fp,"title":"title", "cancel":"Cancel"}, follow = True)
-        updated_object = models.ShowObject.objects.get(id = object.id)
-        self.assertEqual(updated_object.photo.id, 1)
+################################################################################################################
 
-        print("add photo to the object")
-        with open('thumbnail.jpg', "rb") as fp:            
-            response = self.client.post(f'/object/{object.id}/photo/2', {"file": fp,"title":"title", "save":"Save"}, follow = True)
-        updated_object = models.ShowObject.objects.get(id = object.id)
-        self.assertEqual(updated_object.photo.id, 2)
+    def test_set_object_photo(self):
 
-class ImageTest(TestCase):
- 
-    def test_image_conversion(self):
+        print("TEST SET OBJECT PHOTO")
 
-        #test_image_to_db
-        file = open('thumbnail.jpg', "rb")
-        image_data = base64.b64encode(file.read()).decode('utf-8')    
-        stored_data = models.Photo(id=1, thumbnail=image_data)
-        stored_data.save()
-        retrieved_data = models.Photo.objects.get(id=1)
-        retrieved_data.thumbnail
-        print(type(retrieved_data.thumbnail))
-        print(type(image_data))
-        print(retrieved_data.thumbnail[0:10])
-        print(image_data[0:10])
-        assert(retrieved_data.thumbnail == image_data)
+        #create object
+        response = self.client.post("/objects/create", data={"name":"Object One", "longitude":56, "latitude":36},follow = True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual("Object One", list(response.context['objects_list']).pop().name)
+
+        #set object photo
+        with open('myway/test/sample.jpg', "rb") as fp:            
+            response = self.client.post(f'/object/1/photo/0', data = {"file": fp,"title":"title"}, follow = True)
+        response = self.client.post(f'/object/1/photo/1', {"title":"title", "cancel":"cancel"}, follow = True)            
+        self.assertEqual(response.context['object'].photo, None)
+        response = self.client.post(f'/object/1/photo/1', {"title":"title", "save":"save"}, follow = True)            
+        self.assertNotEqual(response.context['object'].photo, None)
+        self.assertEqual(response.status_code, 200)
+
+        #rotate photo
+        photo = response.context['object'].photo
+        img = Image.open(io.BytesIO(base64.b64decode(photo.thumbnail)))
+        size_before = img.size
+        response = self.client.get(f'/object/1/photo/1/rotate/90', follow = True)   
+        response = self.client.post(f'/object/1/photo/1', {"title":"title", "save":"save"}, follow = True)              
+        photo = response.context['object'].photo
+        img = Image.open(io.BytesIO(base64.b64decode(photo.thumbnail)))
+        size_after = img.size
+        self.assertEqual(size_after[1], size_before[0])
+        self.assertEqual(size_after[0], size_before[1])
+
+################################################################################################################    
     
-        #test_db_to_image
-        retrieved_data = models.Photo.objects.get(id=1).thumbnail
-        print(retrieved_data[0:10])
-        image_arr = base64.b64decode(retrieved_data)
-        print(image_arr[0:10])
-        in_memory_file = io.BytesIO(image_arr)
-        img = Image.open(in_memory_file)
+    def test_add_point_object(self):
+        
+        #trip creation            
+        response = self.client.post("/trips/create", data={"name": "Trip One"}, follow = True)
+        self.assertEqual(response.status_code, 200) 
 
-    def test_image_rotation(self):        
-        image = Image.open('thumbnail.jpg')
-        rotated_image = image.rotate(-90, expand=1)
-        assert(image.width == rotated_image.height)
-        assert(image.height == rotated_image.width)
+        #trip name change            
+        response = self.client.post("/trips/1/edit", data={"name": "Trip One Edited"}, follow = True)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual("Trip One Edited", list(response.context['object_list']).pop().name)
 
+        #adding points to the trip
+        response = self.client.post("/trips/1/points/add", data={"longitude":55, "latitude":37, "name":"Point 1"}, follow = True)        
+        response = self.client.post("/trips/1/points/add", data={"longitude":55, "latitude":34, "name":"Point 2"}, follow = True)                
+        response = self.client.post("/trips/1/points/add", data={"longitude":55, "latitude":31, "name":"Point 3"}, follow = True)                        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(list(response.context['object'].points.all())), 3)
 
+        #creating objects
+        response = self.client.post("/objects/create", data={"longitude":55, "latitude":37, "name":"Object 1"}, follow = True)        
+        response = self.client.post("/objects/create", data={"longitude":55, "latitude":37, "name":"Object 2"}, follow = True)                       
+        response = self.client.post("/objects/create", data={"longitude":55, "latitude":37, "name":"Object 3"}, follow = True)                               
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(list(response.context['objects_list'])), 3)
 
+        #assigning object to point
+        response = self.client.get("/trips/1/points/1/objects/1/add", follow = True)
+        self.assertEqual(response.status_code, 200)

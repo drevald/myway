@@ -8,7 +8,6 @@
 ymaps.ready(init);
 var selected;
 
-
 function init () {
     
 myMap = new ymaps.Map("map", {
@@ -114,8 +113,8 @@ function setPoint() {
             <tr>
                 <td>{% trans "Point number" %}{{trip_point.order}}</td>
                 <td><a href="{% url 'core:trip_point_delete' point.trip.id point.id %}">Delete</a></td>
-                <td><a href="{% url 'core:trip_point_edit' point.id %}">Edit</a></td>                
-                <td><a href="{% url 'core:trip_point_objects' point.id %}">Edit Objects</a></td> 
+                <td><a href="{% url 'core:trip_point_edit' object.id point.id %}">Edit</a></td>                
+                <td><a href="{% url 'core:trip_point_objects' point.trip_id point.id %}">Edit Objects</a></td> 
             </tr>
             {% endfor %}
             </table>
