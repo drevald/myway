@@ -34,57 +34,57 @@ class SimpleTest(TransactionTestCase):
         trip = list(trips).pop()
         print(trip.id)
         
-        #3 points creation
-        response = self.client.post("/point/create", data={"longitude": 55.0, "latitude":37, "name":"noname"}, follow = True)
-        response = self.client.post("/point/create", data={"longitude": 55.0, "latitude":37, "name":"noname"}, follow = True)
-        response = self.client.post("/point/create", data={"longitude": 55.0, "latitude":37, "name":"noname"}, follow = True)
-        self.assertEqual(response.status_code, 200)
-        points = response.context['object_list']
-        self.assertEqual(3, len(points))
-        point = list(points).pop()
-        print(f"point.id={point.id} trip.id={trip.id}")
+        # #3 points creation
+        # response = self.client.post("/point/create", data={"longitude": 55.0, "latitude":37, "name":"noname"}, follow = True)
+        # response = self.client.post("/point/create", data={"longitude": 55.0, "latitude":37, "name":"noname"}, follow = True)
+        # response = self.client.post("/point/create", data={"longitude": 55.0, "latitude":37, "name":"noname"}, follow = True)
+        # self.assertEqual(response.status_code, 200)
+        # points = response.context['object_list']
+        # self.assertEqual(3, len(points))
+        # point = list(points).pop()
+        # print(f"point.id={point.id} trip.id={trip.id}")
 
         #3 trip points creation
-        print("adding all 3 points to trip")
-        for point in points:
-            response = self.client.post(f'/trips/{trip.id}/trip_point_add/{point.id}', follow = True)
-        trip_points = response.context['trip_points']
-        for trip_point in trip_points:
-            print(f"id={trip_point.id} order={trip_point.order}")
-        self.assertEquals(models.TripPoint.objects.get(id = 1).order, 0)
-        self.assertEquals(models.TripPoint.objects.get(id = 2).order, 1)
-        self.assertEquals(models.TripPoint.objects.get(id = 3).order, 2)
+        # print("adding all 3 points to trip")
+        # for point in points:
+        #     response = self.client.post(f'/trips/{trip.id}/trip_point_add/{point.id}', follow = True)
+        # trip_points = response.context['trip_points']
+        # for trip_point in trip_points:
+        #     print(f"id={trip_point.id} order={trip_point.order}")
+        # self.assertEquals(models.TripPoint.objects.get(id = 1).order, 0)
+        # self.assertEquals(models.TripPoint.objects.get(id = 2).order, 1)
+        # self.assertEquals(models.TripPoint.objects.get(id = 3).order, 2)
 
-        #point down
-        print("moving down point with id = 2")
-        response = self.client.post(f'/trips/{trip.id}/trip_point_down/2', follow = True)
-        trip_points = response.context['trip_points']
-        for trip_point in trip_points:
-            print(f"id={trip_point.id} order={trip_point.order}")          
-        self.assertEquals(models.TripPoint.objects.get(id = 2).order, 0)
-        self.assertEquals(models.TripPoint.objects.get(id = 1).order, 1)
-        self.assertEquals(models.TripPoint.objects.get(id = 3).order, 2)
+        # #point down
+        # print("moving down point with id = 2")
+        # response = self.client.post(f'/trips/{trip.id}/trip_point_down/2', follow = True)
+        # trip_points = response.context['trip_points']
+        # for trip_point in trip_points:
+        #     print(f"id={trip_point.id} order={trip_point.order}")          
+        # self.assertEquals(models.TripPoint.objects.get(id = 2).order, 0)
+        # self.assertEquals(models.TripPoint.objects.get(id = 1).order, 1)
+        # self.assertEquals(models.TripPoint.objects.get(id = 3).order, 2)
 
-        #point up
-        print("moving up point with id = 2")
-        response = self.client.post(f'/trips/{trip.id}/trip_point_up/2', follow = True)
-        trip_points = response.context['trip_points']
-        for trip_point in trip_points:
-            print(f"id={trip_point.id} order={trip_point.order}")                 
-        self.assertEquals(models.TripPoint.objects.get(id = 1).order, 0)
-        self.assertEquals(models.TripPoint.objects.get(id = 2).order, 1)
-        self.assertEquals(models.TripPoint.objects.get(id = 3).order, 2)
+        # #point up
+        # print("moving up point with id = 2")
+        # response = self.client.post(f'/trips/{trip.id}/trip_point_up/2', follow = True)
+        # trip_points = response.context['trip_points']
+        # for trip_point in trip_points:
+        #     print(f"id={trip_point.id} order={trip_point.order}")                 
+        # self.assertEquals(models.TripPoint.objects.get(id = 1).order, 0)
+        # self.assertEquals(models.TripPoint.objects.get(id = 2).order, 1)
+        # self.assertEquals(models.TripPoint.objects.get(id = 3).order, 2)
 
-        #point deletion
-        print("deleting point with id = 2")
-        response = self.client.post(f'/trips/{trip.id}/trip_point_delete/2', follow = True)
-        trip_points = response.context['trip_points']
-        self.assertEquals(len(trip_points), 2)
-        for trip_point in trip_points:
-            print(f"id={trip_point.id} order={trip_point.order}")
-        self.assertEquals(len(list(models.TripPoint.objects.filter(trip = models.Trip.objects.get(id=trip.id)))), 2)
-        self.assertEquals(models.TripPoint.objects.get(id = 1).order, 0)
-        self.assertEquals(models.TripPoint.objects.get(id = 3).order, 1)
+        # #point deletion
+        # print("deleting point with id = 2")
+        # response = self.client.post(f'/trips/{trip.id}/trip_point_delete/2', follow = True)
+        # trip_points = response.context['trip_points']
+        # self.assertEquals(len(trip_points), 2)
+        # for trip_point in trip_points:
+        #     print(f"id={trip_point.id} order={trip_point.order}")
+        # self.assertEquals(len(list(models.TripPoint.objects.filter(trip = models.Trip.objects.get(id=trip.id)))), 2)
+        # self.assertEquals(models.TripPoint.objects.get(id = 1).order, 0)
+        # self.assertEquals(models.TripPoint.objects.get(id = 3).order, 1)
 
     def test_object_picture(self):
 
