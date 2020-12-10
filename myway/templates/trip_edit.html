@@ -111,17 +111,13 @@ function setPoint() {
             <tr><td><label>Points:</label></td></tr>
             {% for point in object.points.all %}
             <tr>
-                <td>{% trans "Point number" %}{{trip_point.order}}</td>
+                <td>{% trans "Point number" %}{{point.order}}</td>
                 <td><a href="{% url 'core:trip_point_delete' point.trip.id point.id %}">Delete</a></td>
                 <td><a href="{% url 'core:trip_point_edit' object.id point.id %}">Edit</a></td>                
                 <td><a href="{% url 'core:trip_point_objects' point.trip_id point.id %}">Edit Objects</a></td> 
             </tr>
             {% endfor %}
             </table>
-            {% else %}
-            <p>{% trans "Where should I start?" %}</p>
-            <p><input></p>
-            <p><input type="button" value="search"></p>
             {% endif %}            
             <p>
                 <a href="{% url 'core:trip_point_add' trip.id %}">Add point</a>

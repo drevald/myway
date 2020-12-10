@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load i18n %}
+<div>
+    <h1>{% trans "Persons" %}</h1>            
+</div>
+<table>
+{% for person in object_list %}
+<tr>
+    <td><h2>{{ person.name }}</h2></td>
+    <td>
+        <a href="{% url 'core:person_delete' person.id %}">Delete</a>
+        <a href="{% url 'core:person_edit' person.id %}">Edit</a>
+    </td>    
+</tr>
+{% endfor %}
+</table>
+<a href="{% url 'core:person_create' %}">New Person</a>
+{% endblock content %}

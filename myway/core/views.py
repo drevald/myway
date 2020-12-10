@@ -1,5 +1,6 @@
 import base64
 import hashlib
+import io
 from io import BytesIO
 from PIL import Image, ImageFilter
 from django.urls import reverse
@@ -162,7 +163,7 @@ class TripPointAddView(CreateView):
         trip = models.Trip.objects.get(id = self.kwargs.get('pk'))
         self.object = form.save(commit = False)        
         self.object.trip = trip
-        self.object.order = 1
+        self.object.order = 1 + len(trip.points.all())
         return super().form_valid(form)
     def get_success_url(self):
         params = {"pk": self.kwargs["pk"]}
@@ -177,7 +178,7 @@ class TripPointEditView(UpdateView):
         point = models.TripPoint.objects.get(id = self.kwargs.get('pk'))
         self.object = form.save(commit = False)        
         self.object.trip = point.trip
-        self.object.order = 1
+        # self.object.order = 1
         return super().form_valid(form)
     def get_success_url(self):
         point = models.TripPoint.objects.get(id = self.kwargs.get('pk'))
@@ -193,13 +194,6 @@ class TripPointObjectsView(DetailView):
         context = super().get_context_data(**kwargs)
         context['objects'] = models.ShowObject.objects.all()
         return context
-
-# def trip_point_objects(request, pk):
-#     # trip_point_object = models.TripPointObject(
-#     # trip_point = models.TripPoint.objects.get(id = pk),
-#     # object = models.ShowObject.objects.get(id = object_id))
-#     # trip_point_object.save()
-#     return HttpResponseRedirect(reverse('core:trip_point_objects', kwargs={'pk':pk}))
 
 def trip_point_object_add(request, trip_id, point_id, object_id):
     trip_point_object = models.TripPointObject(
@@ -261,9 +255,10 @@ def object_photo_rotate(request, pk, new_id, degree):
     in_memory_file = BytesIO(image_arr)
     img = Image.open(in_memory_file)
     img = img.rotate(angle=degree, expand=1)
-    img.save('thumbnail.jpg', 'JPEG')
-    file = open('thumbnail.jpg', "rb")
-    image_data = base64.b64encode(file.read()).decode('utf-8') 
+    memstr = io.BytesIO()
+    img.save(memstr, 'JPEG')
+    memstr.seek(0)
+    image_data = base64.b64encode(memstr.read()).decode('utf-8') 
     photo.thumbnail = image_data
     photo.save()
     form = forms.UploadFileForm()
@@ -273,35 +268,41 @@ def object_photo_rotate(request, pk, new_id, degree):
     else:
         return HttpResponseRedirect(reverse('core:object_photo', kwargs={'pk':pk,'new_id':photo.id}))
 
-
 def md5(fname):
     hash_md5 = hashlib.md5()
-    with open(fname, "rb") as f:
-        for chunk in iter(lambda: f.read(4096), b""):
-            hash_md5.update(chunk)
+    for chunk in iter(lambda: fname.read(4096), b""):
+        hash_md5.update(chunk)
+    hash_md5.update(chunk)
     return hash_md5.hexdigest()    
 
 def handle_uploaded_file(f):
-    stored = '/home/denis/Projects/myway/out'
-    with open(stored, 'wb+') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
-    hash = md5(stored)
-    im = Image.open(stored)        
+    hash = md5(f)
+    im = Image.open(f)        
     size = (360, 240)
     im.thumbnail(size)
-    im.save('thumbnail.jpg', 'JPEG')
-
-    image_file = open('thumbnail.jpg', "rb") # opening for [r]eading as [b]inary
-    data = base64.b64encode(image_file.read()).decode('utf-8') # if you only wanted to read 512 bytes, do .read(512)
-    image_file.close()
-
+    memstr = io.BytesIO()
+    im.save(memstr, 'JPEG')
+    memstr.seek(0)
+    data = base64.b64encode(memstr.read()).decode('utf-8') 
     return data
 
-def photo_view(request, pk):
-    with open('/home/denis/Projects/myway/out', "rb") as image_file:
-        image_data = base64.b64encode(image_file.read()).decode('utf-8')
-        ctx = {"image":image_data}
-        return render(request, 'index.html', ctx)
+class PersonsView(ListView):
+    model = models.Person
+    template_name = 'persons.html'
 
+class PersonCreateView(CreateView):
+    model = models.Person
+    template_name = 'person_edit.html'
+    fields = '__all__'
+    success_url = reverse_lazy('core:persons')    
 
+class PersonDeleteView(DeleteView):
+    model = models.Person
+    template_name = 'person_delete.html'
+    success_url = reverse_lazy('core:persons')    
+
+class PersonEditView(UpdateView):
+    model = models.Person
+    template_name = 'person_edit.html'
+    fields = '__all__'
+    success_url = reverse_lazy('core:persons')    
