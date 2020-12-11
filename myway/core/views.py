@@ -348,3 +348,27 @@ class TagEditView(UpdateView):
     template_name = 'tag_edit.html'
     fields = '__all__'
     success_url = reverse_lazy('core:tags')      
+
+class ObjectEventsView(DetailView):
+    model = models.ShowObject
+    template_name = 'object_events.html'    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['all_events'] = models.Event.objects.all()
+        return context    
+
+class ObjectEventsAddView(ObjectEventsView):
+    def get(self, request, *args, **kwargs):
+        object = models.ShowObject.objects.get(id = kwargs['pk'])
+        event = models.Event.objects.get(id = kwargs['event_id'])
+        object.events.add(event)
+        object.save()
+        return super().get(self, request, *args, **kwargs)
+
+class ObjectEventsDeleteView(ObjectEventsView):
+    def get(self, request, *args, **kwargs):
+        object = models.ShowObject.objects.get(id = kwargs['pk'])
+        event = models.Event.objects.get(id = kwargs['event_id'])
+        object.events.remove(event)
+        object.save()
+        return super().get(self, request, *args, **kwargs)

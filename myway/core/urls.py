@@ -42,6 +42,10 @@ urlpatterns = [
     path('tags', views.TagsView.as_view(), name='tags'),
     path('tags/create', views.TagCreateView.as_view(), name='tag_create'),
     path('tags/<pk>/delete', views.TagDeleteView.as_view(), name='tag_delete'),
-    path('tags/<pk>/edit', views.TagEditView.as_view(), name='tag_edit')
+    path('tags/<pk>/edit', views.TagEditView.as_view(), name='tag_edit'),
+
+    path('object/<pk>/events', views.ObjectEventsView.as_view(), name='object_events'),
+    path('object/<pk>/event/<int:event_id>/add', views.ObjectEventsAddView.as_view(), name='object_event_add'),
+    path('object/<pk>/event/<int:event_id>/delete', views.ObjectEventsDeleteView.as_view(), name='object_event_delete')    
 
 ]

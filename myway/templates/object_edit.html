@@ -56,7 +56,10 @@ function init () {
         </td>
         <td valign="top">
             <h3>{% trans "Related events" %}</h3>
-            <a>{% trans "Add event" %}</a>
+            {% for event in object.events.all %}
+            {{ event.name }}
+            {% endfor %}
+            <a href="{% url 'core:object_events' object.id %}">{% trans "Add event" %}</a>
             <h3>{% trans "Related persons" %}</h3>
             <a>{% trans "Add person" %}</a>
             <h3>{% trans "Related tags" %}</h3>
