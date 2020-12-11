@@ -306,3 +306,45 @@ class PersonEditView(UpdateView):
     template_name = 'person_edit.html'
     fields = '__all__'
     success_url = reverse_lazy('core:persons')    
+
+class EventsView(ListView):
+    model = models.Event
+    template_name = 'events.html'
+
+class EventCreateView(CreateView):
+    model = models.Event
+    template_name = 'event_edit.html'
+    fields = '__all__'
+    success_url = reverse_lazy('core:events')    
+
+class EventDeleteView(DeleteView):
+    model = models.Event
+    template_name = 'event_delete.html'
+    success_url = reverse_lazy('core:events')    
+
+class EventEditView(UpdateView):
+    model = models.Event
+    template_name = 'event_edit.html'
+    fields = '__all__'
+    success_url = reverse_lazy('core:events')  
+
+class TagsView(ListView):
+    model = models.Tag
+    template_name = 'tags.html'
+
+class TagCreateView(CreateView):
+    model = models.Tag
+    template_name = 'tag_edit.html'
+    fields = '__all__'
+    success_url = reverse_lazy('core:tags')    
+
+class TagDeleteView(DeleteView):
+    model = models.Tag
+    template_name = 'tag_delete.html'
+    success_url = reverse_lazy('core:tags')    
+
+class TagEditView(UpdateView):
+    model = models.Tag
+    template_name = 'tag_edit.html'
+    fields = '__all__'
+    success_url = reverse_lazy('core:tags')      

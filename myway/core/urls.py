@@ -32,6 +32,16 @@ urlpatterns = [
     path('persons', views.PersonsView.as_view(), name='persons'),
     path('persons/create', views.PersonCreateView.as_view(), name='person_create'),
     path('persons/<pk>/delete', views.PersonDeleteView.as_view(), name='person_delete'),
-    path('persons/<pk>/edit', views.PersonEditView.as_view(), name='person_edit')
+    path('persons/<pk>/edit', views.PersonEditView.as_view(), name='person_edit'),
+
+    path('events', views.EventsView.as_view(), name='events'),
+    path('events/create', views.EventCreateView.as_view(), name='event_create'),
+    path('events/<pk>/delete', views.EventDeleteView.as_view(), name='event_delete'),
+    path('events/<pk>/edit', views.EventEditView.as_view(), name='event_edit'),
+
+    path('tags', views.TagsView.as_view(), name='tags'),
+    path('tags/create', views.TagCreateView.as_view(), name='tag_create'),
+    path('tags/<pk>/delete', views.TagDeleteView.as_view(), name='tag_delete'),
+    path('tags/<pk>/edit', views.TagEditView.as_view(), name='tag_edit')
 
 ]

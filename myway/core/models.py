@@ -31,17 +31,17 @@ class Tag(models.Model):
 
 class Person(models.Model):
     first_name = models.CharField(max_length = 32)
-    last_name = models.CharField(max_length = 32, null = True)
-    middle_name = models.CharField(max_length = 32, null = True)
+    last_name = models.CharField(max_length = 32, null = True, blank=True)
+    middle_name = models.CharField(max_length = 32, null = True, blank=True)
     birth_date = models.DateField()
-    death_date = models.DateField(null = True)
-    biography = models.TextField(null = True)
+    death_date = models.DateField(null = True, blank=True)
+    biography = models.TextField(null = True, blank=True)
 
 class Event(models.Model):
     name = models.CharField(max_length = 32)
-    start_date = models.DateField(null = True)
-    end_date = models.DateField(null = True)
-    description = models.TextField(null = True)
+    start_date = models.DateField(null = True, blank=True)
+    end_date = models.DateField(null = True, blank=True)
+    description = models.TextField(null = True, blank=True)
 
 class PersonTag(models.Model):
     person = models.ForeignKey(Person, on_delete = models.CASCADE)

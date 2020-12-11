@@ -7,7 +7,7 @@
 <table>
 {% for person in object_list %}
 <tr>
-    <td><h2>{{ person.name }}</h2></td>
+    <td><h2>{{ person.first_name}}&nbsp; {{person.last_name}}</h2></td>
     <td>
         <a href="{% url 'core:person_delete' person.id %}">Delete</a>
         <a href="{% url 'core:person_edit' person.id %}">Edit</a>

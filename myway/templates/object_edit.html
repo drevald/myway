@@ -34,12 +34,12 @@ function init () {
 }
    
 </script>
-<table>
+<div>
+    <h1>{% trans "Show Object" %}</h1>            
+</div>
+<table border=1>
     <tr>
         <td valign="top">
-            <div>
-                <h1>{% trans "Show Object" %}</h1>            
-            </div>
             {% if image %}
             <img src="data:image/jpg;base64,{{ image }}">
             {% endif %}
@@ -51,9 +51,17 @@ function init () {
                 <input type="submit" value='{% trans "Cancel" %}'> 
             </form>                
         </td>
-        <td>
-            <div id="map" style="width: 640;height: 480;"></div>
+        <td valign="top">
+            <div id="map" style="width: 480;height: 480;"></div>
         </td>
+        <td valign="top">
+            <h3>{% trans "Related events" %}</h3>
+            <a>{% trans "Add event" %}</a>
+            <h3>{% trans "Related persons" %}</h3>
+            <a>{% trans "Add person" %}</a>
+            <h3>{% trans "Related tags" %}</h3>
+            <a>{% trans "Add tag" %}</a>
+        </td>        
     </tr>
 </table>
 
