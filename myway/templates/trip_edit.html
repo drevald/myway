@@ -121,12 +121,12 @@ function setPoint() {
             {% endif %}            
             <p>
                 <a href="{% url 'core:trip_point_add' trip.id %}">Add point</a>
-                    <input type="button" value="Preview">
-                    <input type="button" value="Hide">
+                <input type="button" value="Preview">
+                <input type="button" value="Hide">
             </p>
             <p>
-                    <input type="submit" value='{% trans "Save" %}'>
-                    <input type="submit" value='{% trans "Cancel" %}'> 
+                <input type="submit" value='{% trans "Save" %}'>
+                <input type="submit" value='{% trans "Cancel" %}'> 
             </p>
         </form>                
         </td>

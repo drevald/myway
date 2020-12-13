@@ -11,12 +11,12 @@ ymaps.ready(init);
 function init () {
 
     myMap = new ymaps.Map("map", {
-    center: [55.7558171758732, 37.61771159788882],
+    center: [{{request.session.latitude}}, {{request.session.longitude}}],
         zoom: 16
     }),
 
     myGeoObject = new ymaps.GeoObject({
-        geometry: {type: "Point",coordinates: [55.7558171758732, 37.61771159788882]},
+        geometry: {type: "Point",coordinates: [{{request.session.latitude}}, {{request.session.longitude}}]},
         properties: {iconContent: 'New Point'}
     }, {preset: 'islands#blackStretchyIcon',draggable: true
     })

@@ -177,6 +177,16 @@ class TripPointAddView(CreateView):
     def get_success_url(self):
         params = {"pk": self.kwargs["pk"]}
         return reverse_lazy("core:trip_edit", kwargs=params)
+    def get(self, request, *args, **kwargs):
+        if 'latitude' not in request.session:
+            request.session["latitude"] = "55.7558171758732"
+            request.session["longitude"] = "37.61771159788882"
+        return super().get(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        request.session["latitude"] = request.POST['latitude']
+        request.session["longitude"] = request.POST['longitude']
+        return super().post(request, *args, **kwargs)
+
 
 class TripPointEditView(UpdateView):
     model = models.TripPoint
