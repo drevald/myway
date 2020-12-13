@@ -26,12 +26,22 @@ DATABASES = {
 }
 
 INSTALLED_APPS = [
-    'myway.core'
+    'myway.core',
+    'django.contrib.sessions'
+]
+
+MIDDLEWARE = [
+    'django.contrib.sessions.middleware.SessionMiddleware'
 ]
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': ['myway/templates'],
+        'OPTIONS': {
+            "context_processors": [
+                "django.template.context_processors.request",
+            ]
+        },        
     },
 ]

@@ -51,19 +51,36 @@ function init () {
                 <input type="submit" value='{% trans "Cancel" %}'> 
             </form>                
         </td>
+        <td valign="top" width="25%">
+            <textarea width="100%" height="100%">
+                {{ object.story }} 
+            </textarea>
+        </td>        
         <td valign="top">
-            <div id="map" style="width: 480;height: 480;"></div>
+            <div id="map" style="width: 360;height: 480;"></div>
         </td>
         <td valign="top">
             <h3>{% trans "Related events" %}</h3>
             {% for event in object.events.all %}
-            {{ event.name }}
+                {{ event.name }}
             {% endfor %}
+            <br>
             <a href="{% url 'core:object_events' object.id %}">{% trans "Add event" %}</a>
+            <hr>
             <h3>{% trans "Related persons" %}</h3>
-            <a>{% trans "Add person" %}</a>
+            {% for person in object.persons.all %}
+                {{ person.first_name }}&nbsp;{{ person.last_name }}
+            {% endfor %}
+            <br>
+            <a href="{% url 'core:object_persons' object.id %}">{% trans "Add person" %}</a>            
+            <hr>
             <h3>{% trans "Related tags" %}</h3>
-            <a>{% trans "Add tag" %}</a>
+            {% for tag in object.tags.all %}
+                {{ tag.name }}
+            {% endfor %}
+            <br>
+            <a href="{% url 'core:object_tags' object.id %}">{% trans "Add tag" %}</a>            
+
         </td>        
     </tr>
 </table>

@@ -46,6 +46,14 @@ urlpatterns = [
 
     path('object/<pk>/events', views.ObjectEventsView.as_view(), name='object_events'),
     path('object/<pk>/event/<int:event_id>/add', views.ObjectEventsAddView.as_view(), name='object_event_add'),
-    path('object/<pk>/event/<int:event_id>/delete', views.ObjectEventsDeleteView.as_view(), name='object_event_delete')    
+    path('object/<pk>/event/<int:event_id>/delete', views.ObjectEventsDeleteView.as_view(), name='object_event_delete'),
+
+    path('object/<pk>/tags', views.ObjectTagsView.as_view(), name='object_tags'),
+    path('object/<pk>/tag/<int:tag_id>/add', views.ObjectTagsAddView.as_view(), name='object_tag_add'),
+    path('object/<pk>/tag/<int:tag_id>/delete', views.ObjectTagsDeleteView.as_view(), name='object_tag_delete'),    
+
+    path('object/<pk>/persons', views.ObjectPersonsView.as_view(), name='object_persons'),
+    path('object/<pk>/person/<int:person_id>/add', views.ObjectPersonsAddView.as_view(), name='object_person_add'),
+    path('object/<pk>/person/<int:person_id>/delete', views.ObjectPersonsDeleteView.as_view(), name='object_person_delete')    
 
 ]

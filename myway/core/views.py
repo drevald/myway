@@ -79,6 +79,15 @@ class ObjectCreateView(CreateView):
     template_name = 'object_new.html'
     fields = ('name','latitude','longitude')
     success_url = reverse_lazy('core:objects')
+    def get(self, request, *args, **kwargs):
+        if 'latitude' not in request.session:
+            request.session["latitude"] = "55.7558171758732"
+            request.session["longitude"] = "37.61771159788882"
+        return super().get(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        request.session["latitude"] = request.POST['latitude']
+        request.session["longitude"] = request.POST['longitude']
+        return super().post(request, *args, **kwargs)
 
 class ObjectDeleteView(DeleteView):
     model = models.ShowObject
@@ -370,5 +379,53 @@ class ObjectEventsDeleteView(ObjectEventsView):
         object = models.ShowObject.objects.get(id = kwargs['pk'])
         event = models.Event.objects.get(id = kwargs['event_id'])
         object.events.remove(event)
+        object.save()
+        return super().get(self, request, *args, **kwargs)
+
+class ObjectTagsView(DetailView):
+    model = models.ShowObject
+    template_name = 'object_tags.html'    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['all_tags'] = models.Tag.objects.all()
+        return context    
+
+class ObjectTagsAddView(ObjectTagsView):
+    def get(self, request, *args, **kwargs):
+        object = models.ShowObject.objects.get(id = kwargs['pk'])
+        tag = models.Tag.objects.get(id = kwargs['tag_id'])
+        object.tags.add(tag)
+        object.save()
+        return super().get(self, request, *args, **kwargs)
+
+class ObjectTagsDeleteView(ObjectTagsView):
+    def get(self, request, *args, **kwargs):
+        object = models.ShowObject.objects.get(id = kwargs['pk'])
+        tag = models.Tag.objects.get(id = kwargs['tag_id'])
+        object.tags.remove(tag)
+        object.save()
+        return super().get(self, request, *args, **kwargs)        
+
+class ObjectPersonsView(DetailView):
+    model = models.ShowObject
+    template_name = 'object_persons.html'    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['all_persons'] = models.Person.objects.all()
+        return context    
+
+class ObjectPersonsAddView(ObjectPersonsView):
+    def get(self, request, *args, **kwargs):
+        object = models.ShowObject.objects.get(id = kwargs['pk'])
+        person = models.Person.objects.get(id = kwargs['person_id'])
+        object.persons.add(person)
+        object.save()
+        return super().get(self, request, *args, **kwargs)
+
+class ObjectPersonsDeleteView(ObjectPersonsView):
+    def get(self, request, *args, **kwargs):
+        object = models.ShowObject.objects.get(id = kwargs['pk'])
+        person = models.Person.objects.get(id = kwargs['person_id'])
+        object.persons.remove(person)
         object.save()
         return super().get(self, request, *args, **kwargs)

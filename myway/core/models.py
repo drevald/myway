@@ -71,6 +71,7 @@ class TripPoint(models.Model):
 class TripPointObject(models.Model):
     trip_point = models.ForeignKey(TripPoint, related_name="show_objects", on_delete = models.CASCADE)
     object = models.ForeignKey(ShowObject, on_delete=models.CASCADE)
+    story = models.TextField(null = True, blank= True)
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['trip_point', 'object'], name="trip_point_object")
