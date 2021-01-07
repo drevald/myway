@@ -116,6 +116,20 @@ function setPoint() {
                 <td><a href="{% url 'core:trip_point_edit' object.id point.id %}">Edit</a></td>                
                 <td><a href="{% url 'core:trip_point_objects' point.trip_id point.id %}">Edit Objects</a></td> 
             </tr>
+            <tr>
+                <td colspan="4">
+                    <table>
+                        <tr>
+                            {% for show_object in point.show_objects.all %}
+                                <td>
+                                    <small>{{ show_object.object.name }}<small><br>
+                                    <img src="data:image/jpg;base64,{{ show_object.object.photo.thumbnail }}" width="100" height="100">
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    </table>
+                </td>
+            </tr>            
             {% endfor %}
             </table>
             {% endif %}            

@@ -230,7 +230,7 @@ def trip_point_object_delete(request, trip_id, point_id, object_id):
     return HttpResponseRedirect(reverse('core:trip_point_objects', kwargs={'trip_id':trip_id, 'pk':point_id}))    
 
 def object_photo(request, pk, new_id):
-    if request.method == 'POST':
+    if request.method == 'POST':8
         form = forms.UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             if request.POST.get('save') is not None and new_id != 0:
