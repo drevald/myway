@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load i18n %}
+<div>
+    <div>
+        <h1>{% trans "Object Tags for " %}{{ object.name }}</h1>            
+    </div>
+</div>
+
+<table width="50%">
+    <tr>
+        <td>{% trans "Related Tags" %}</td>
+        <td>{% trans "Tags list" %}</td>
+    </tr>
+    <tr>
+        <td>
+            {% for tag in object.tags.all %}
+                {{ tag.name }}<a href="{% url 'core:object_tag_delete' object.id tag.id %}">&gt;&gt;</a>&nbsp;
+            {% endfor %}        
+        </td>
+        <td>
+            {% for tag in all_tags %}
+                <a href="{% url 'core:object_tag_add' object.id tag.id %}">&lt;&lt;</a>&nbsp;{{ tag.name }}
+            {% endfor %}        
+        </td>
+    </tr>
+</table>
+{% endblock %}

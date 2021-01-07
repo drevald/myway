@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load i18n %}
+<div>
+    <div>
+        <h1>{% trans "Object Events for " %}{{ object.name }}</h1>            
+    </div>
+</div>
+
+<table width="50%">
+    <tr>
+        <td>{% trans "Related Events" %}</td>
+        <td>{% trans "Events list" %}</td>
+    </tr>
+    <tr>
+        <td>
+            {% for event in object.events.all %}
+                {{ event.name }}<a href="{% url 'core:object_event_delete' object.id event.id %}">&gt;&gt;</a>&nbsp;
+            {% endfor %}        
+        </td>
+        <td>
+            {% for event in all_events %}
+                <a href="{% url 'core:object_event_add' object.id event.id %}">&lt;&lt;</a>&nbsp;{{ event.name }}
+            {% endfor %}        
+        </td>
+    </tr>
+</table>
+{% endblock %}

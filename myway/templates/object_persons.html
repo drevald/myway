@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load i18n %}
+<div>
+    <div>
+        <h1>{% trans "Object Persons for " %}{{ object.name }}</h1>            
+    </div>
+</div>
+
+<table width="50%">
+    <tr>
+        <td>{% trans "Related Persons" %}</td>
+        <td>{% trans "Persons list" %}</td>
+    </tr>
+    <tr>
+        <td>
+            {% for person in object.persons.all %}
+                &nbsp;{{ person.first_name }}&nbsp;{{ person.last_name }}<a href="{% url 'core:object_person_delete' object.id person.id %}">&gt;&gt;</a>&nbsp;
+            {% endfor %}        
+        </td>
+        <td>
+            {% for person in all_persons %}
+                <a href="{% url 'core:object_person_add' object.id person.id %}">&lt;&lt;</a>&nbsp;{{ person.first_name }}&nbsp;{{ person.last_name }}
+            {% endfor %}        
+        </td>
+    </tr>
+</table>
+{% endblock %}
