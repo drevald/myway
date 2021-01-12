@@ -27,7 +27,7 @@ class SimpleTest(TransactionTestCase):
     def test_add_trip(self):
         
         #trip creation            
-        response = self.client.post("/trips/create", data={"name": "Trip One"}, follow = True)
+        response = self.client.post("/trips/create", Pillowdata={"name": "Trip One"}, follow = True)
         self.assertEqual(response.status_code, 200) 
 
         #trip name change            
