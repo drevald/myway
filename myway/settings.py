@@ -1,29 +1,47 @@
-DATABASE_URL = "postgres://postgres:password@127.0.0.1:5432/myway"
+import os
+import environ
+
+env = environ.Env()
+
+BASE_DIR = environ.Path(__file__) - 2
+
+dot_env = str(BASE_DIR.path(".env"))
+if os.path.exists(dot_env):
+    env.read_env(dot_env)
+
+# DATABASE_URL = "postgres://postgres:password@127.0.0.1:5432/myway"
+
 PORT = 8000
 SECRET_KEY = 1
 DEBUG = True
 ROOT_URLCONF = "myway.urls"
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'myway',
-        'USER': 'postgres',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',
-        'PORT': '5432'
-    },
-    'replica': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mytest',
-        'USER': 'postgres',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',
-        'PORT': '5432',
-        'TEST': {
-            'MIRROR': 'default',
-        }
-    }
+    "default": env.db(),
+    "replica": env.db(), 'TEST': {'MIRROR': 'default'}
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'myway',
+#         'USER': 'postgres',
+#         'PASSWORD': 'password',
+#         'HOST': 'localhost',
+#         'PORT': '5432'
+#     },
+#     'replica': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'mytest',
+#         'USER': 'postgres',
+#         'PASSWORD': 'password',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#         'TEST': {
+#             'MIRROR': 'default',
+#         }
+#     }
+# }
 
 INSTALLED_APPS = [
     'myway.core',
