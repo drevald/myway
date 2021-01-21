@@ -6,6 +6,7 @@ env = environ.Env()
 BASE_DIR = environ.Path(__file__) - 2
 
 dot_env = str(BASE_DIR.path(".env"))
+
 if os.path.exists(dot_env):
     env.read_env(dot_env)
 
