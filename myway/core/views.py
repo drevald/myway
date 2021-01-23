@@ -77,10 +77,10 @@ class ObjectsView(ListView):
 class ObjectCreateView(CreateView):
     model = models.ShowObject
     template_name = 'object_new.html'
-    fields = ('name','latitude','longitude')
+    form_class = forms.ObjectForm
     success_url = reverse_lazy('core:objects')
     def get(self, request, *args, **kwargs):
-        if 'latitude' not in request.session:
+        if 'latitude' not in request.session or request.session['latitude'] == '':
             request.session["latitude"] = "55.7558171758732"
             request.session["longitude"] = "37.61771159788882"
         return super().get(request, *args, **kwargs)
@@ -97,7 +97,7 @@ class ObjectDeleteView(DeleteView):
 class ObjectEditView(UpdateView):
     model = models.ShowObject
     template_name = 'object_edit.html'
-    fields = ('name','latitude','longitude')
+    form_class = forms.ObjectForm    
     success_url = reverse_lazy('core:objects')
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

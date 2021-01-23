@@ -14,9 +14,12 @@ class PhotoForm (forms.ModelForm):
 
 class UploadFileForm(forms.Form):
     title = forms.CharField(max_length = 50, initial='title')
-    # file = forms.FileField(widget=forms.FileInput(attrs={
-    #     'onchange': 'name=this.value;this.form["title"].value = value.substring(1 + value.lastIndexOf("\\\\"), value.lenght)'
-    #     }))
-    #file = forms.FileField()
     file = forms.FileField(required=False, widget=forms.FileInput(attrs={'onchange':'preview(this.form)'}))
     
+class ObjectForm(forms.ModelForm):
+    longitude = forms.FloatField(widget=forms.HiddenInput())
+    latitude = forms.FloatField(widget=forms.HiddenInput())
+    name = forms.TextInput()
+    class Meta:
+        model = models.ShowObject
+        fields = ['name','longitude','latitude']
