@@ -30,7 +30,7 @@ class Person(models.Model):
 class ShowObject(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
-    address = models.CharField(max_length = 128, null = True)
+    address = models.CharField(max_length = 128, null = True, blank=True)
     name = models.CharField(max_length = 32)
     photo = models.ForeignKey(Photo, on_delete = models.CASCADE, null = True)
     persons = models.ManyToManyField(Person)
