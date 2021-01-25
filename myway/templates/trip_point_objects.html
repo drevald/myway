@@ -25,7 +25,7 @@
         <td valign="top">
             <p><label>{% trans "Objects near by:" %}</label> </p>
             <table>
-                {% for show_object in objects.all %}
+                {% for show_object in objects_near %}
                     <tr>
                         <td><a href="{% url 'core:trip_point_object_add' object.trip.id object.id show_object.id %}">{% trans "<<" %}</a></td><td>{{show_object.name}}</td>
                     </tr>

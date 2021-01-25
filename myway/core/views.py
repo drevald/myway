@@ -211,7 +211,9 @@ class TripPointObjectsView(DetailView):
         return reverse_lazy('core:trip_edit', kwargs={'pk':trip_id})
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['objects'] = models.ShowObject.objects.all()
+        params = [kwargs['object'].latitude, kwargs['object'].latitude, kwargs['object'].longitude, kwargs['object'].longitude]
+        context['objects_near'] = models.ShowObject.objects.raw(
+            'SELECT * FROM core_showobject WHERE ((latitude - %s)*(latitude - %s) + (longitude - %s)*(longitude-%s)) < 0.0001', params)
         return context
 
 def trip_point_object_add(request, trip_id, point_id, object_id):
