@@ -46,7 +46,8 @@ DATABASES = {
 
 INSTALLED_APPS = [
     'myway.core',
-    'django.contrib.sessions'
+    'django.contrib.sessions',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -64,3 +65,5 @@ TEMPLATES = [
         },        
     },
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

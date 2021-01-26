@@ -5,9 +5,10 @@
     <div>
         <h1>{% trans "Event details" %}</h1>            
     </div>
+    {% load crispy_forms_tags %}
     <form action="" method="post">
         {% csrf_token %}             
-        {{ form.as_p }}
+        {{ form | crispy }}
         <input type="submit" value='{% trans "Save" %}'>
         <input type="submit" value='{% trans "Cancel" %}'> 
     </form>                
