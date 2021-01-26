@@ -166,7 +166,7 @@ class TripPointAddView(CreateView):
     print("TRIP POINT ADD VIEW")
     model = models.TripPoint
     template_name = 'trip_point_new.html'
-    fields = ('latitude','longitude','name')
+    form_class = forms.TripPointForm
     success_url = reverse_lazy('core:trip_edit')
     def form_valid(self, form):
         trip = models.Trip.objects.get(id = self.kwargs.get('pk'))
@@ -191,7 +191,7 @@ class TripPointAddView(CreateView):
 class TripPointEditView(UpdateView):
     model = models.TripPoint
     template_name = 'trip_point_edit.html'
-    fields = ('latitude','longitude','name')
+    form_class = forms.TripPointForm
     success_url = reverse_lazy('core:trip_edit')
     def form_valid(self, form):
         point = models.TripPoint.objects.get(id = self.kwargs.get('pk'))
@@ -207,6 +207,7 @@ class TripPointEditView(UpdateView):
 class TripPointObjectsView(DetailView):
     model = models.TripPoint
     template_name = 'trip_point_objects.html'
+    form_class = forms.TripPointForm    
     def get_success_url(self):
         return reverse_lazy('core:trip_edit', kwargs={'pk':trip_id})
     def get_context_data(self, **kwargs):

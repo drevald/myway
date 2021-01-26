@@ -11,15 +11,22 @@ ymaps.ready(init);
 function init () {
 
     myMap = new ymaps.Map("map", {
-    center: [55.7558171758732, 37.61771159788882],
+    center: [{{request.session.latitude}}, {{request.session.longitude}}],
         zoom: 16
     }),
 
     myGeoObject = new ymaps.GeoObject({
-        geometry: {type: "Point",coordinates: [55.7558171758732, 37.61771159788882]},
+        geometry: {type: "Point",coordinates: [{{request.session.latitude}}, {{request.session.longitude}}]},
         properties: {iconContent: 'New Point'}
     }, {preset: 'islands#blackStretchyIcon',draggable: true
     })
+
+    myMap.events.add('click', function (e) {
+        var coords = e.get('coords');
+        myGeoObject.geometry.setCoordinates(coords);
+        document.all['latitude'].value = coords[0];
+        document.all['longitude'].value = coords[1];
+    });
 
     myGeoObject.events.add(['mapchange','dragend'], 
         function (e) {

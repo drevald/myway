@@ -21,6 +21,13 @@ function init () {
     }, {preset: 'islands#blackStretchyIcon',draggable: true
     })
 
+    myMap.events.add('click', function (e) {
+        var coords = e.get('coords');
+        myGeoObject.geometry.setCoordinates(coords);
+        document.all['latitude'].value = coords[0];
+        document.all['longitude'].value = coords[1];
+    });
+
     myGeoObject.events.add(['mapchange','dragend'], 
         function (e) {
             coords = myGeoObject.geometry.getCoordinates();

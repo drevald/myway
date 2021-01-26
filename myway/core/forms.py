@@ -24,3 +24,11 @@ class ObjectForm(forms.ModelForm):
     class Meta:
         model = models.ShowObject
         fields = ['name','address','longitude','latitude']
+
+class TripPointForm(forms.ModelForm):
+    longitude = forms.FloatField(widget=forms.HiddenInput())
+    latitude = forms.FloatField(widget=forms.HiddenInput())
+    name = forms.TextInput()
+    class Meta:
+        model = models.ShowObject
+        fields = ['name','longitude','latitude']        

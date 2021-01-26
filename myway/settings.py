@@ -17,32 +17,32 @@ SECRET_KEY = 1
 DEBUG = True
 ROOT_URLCONF = "myway.urls"
 
-DATABASES = {
-    "default": env.db(),
-    "replica": env.db(), 'TEST': {'MIRROR': 'default'}
-}
-
 # DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'myway',
-#         'USER': 'postgres',
-#         'PASSWORD': 'password',
-#         'HOST': 'localhost',
-#         'PORT': '5432'
-#     },
-#     'replica': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'mytest',
-#         'USER': 'postgres',
-#         'PASSWORD': 'password',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#         'TEST': {
-#             'MIRROR': 'default',
-#         }
-#     }
+#     'default': env.db(),
+#     'replica': env.db(), 'TEST': {'MIRROR': 'default'}
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'myway',
+        'USER': 'postgres',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': '5432'
+    },
+    'replica': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'mytest',
+        'USER': 'postgres',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': '5432',
+        'TEST': {
+            'MIRROR': 'default',
+        }
+    }
+}
 
 INSTALLED_APPS = [
     'myway.core',
