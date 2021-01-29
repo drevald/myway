@@ -33,6 +33,7 @@ class SimpleTest(TransactionTestCase):
 
         #trip name change            
         response = self.client.post("/trips/1/edit", data={"name": "Trip One Edited"}, follow = True)
+        print(response.content)
         self.assertEqual(response.status_code, 200)
         self.assertEqual("Trip One Edited", list(response.context['object_list']).pop().name)
         print("trip name change done")
