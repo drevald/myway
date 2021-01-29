@@ -64,10 +64,10 @@ class TripPoint(models.Model):
     name = models.CharField(max_length=32, null=True, default="Point")    
     trip = models.ForeignKey(Trip, related_name="points", on_delete = models.CASCADE)
     order = models.IntegerField()
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['trip', 'point'], name="trip_point")
-        ]
+    # class Meta:
+    #     constraints = [
+    #         models.UniqueConstraint(fields=['trip', 'point'], name="trip_point")
+    #     ]
 
 class TripPointObject(models.Model):
     trip_point = models.ForeignKey(TripPoint, related_name="show_objects", on_delete = models.CASCADE)
