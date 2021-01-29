@@ -66,6 +66,6 @@ TEMPLATES = [
     },
 ]
 
-CRISPY_TEMPLATE_PACK = 'bootstrap3'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 ALLOWED_HOSTS = ['0.0.0.0','127.0.0.1','192.168.0.191']
