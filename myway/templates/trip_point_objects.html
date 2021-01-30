@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% block content %}
 {% load i18n %}
 <div>
@@ -9,7 +10,7 @@
         <td valign="top" width="33%">
             <form action="" method="post">
                 {% csrf_token %}             
-                {{ form.as_p }}
+                {{ form|crispy}}
                 <p><label>{% trans "Objects:" %}</label> </p>
                 <table>
                 {% for trip_point_object in object.show_objects.all %}

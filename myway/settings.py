@@ -58,6 +58,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': ['myway/templates'],
+        'APP_DIRS': True,
         'OPTIONS': {
             "context_processors": [
                 "django.template.context_processors.request",
@@ -66,6 +67,6 @@ TEMPLATES = [
     },
 ]
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+# CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 ALLOWED_HOSTS = ['0.0.0.0','127.0.0.1','192.168.0.191']
