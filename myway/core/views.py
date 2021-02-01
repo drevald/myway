@@ -187,7 +187,6 @@ class TripPointAddView(CreateView):
         request.session["longitude"] = request.POST['longitude']
         return super().post(request, *args, **kwargs)
 
-
 class TripPointEditView(UpdateView):
     model = models.TripPoint
     template_name = 'trip_point_edit.html'

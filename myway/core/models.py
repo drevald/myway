@@ -15,7 +15,7 @@ class Event(models.Model):
     start_date = models.DateField(null = True, blank=True)
     end_date = models.DateField(null = True, blank=True)
     description = models.TextField(null = True, blank=True)    
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, blank=True)
 
 class Person(models.Model):
     first_name = models.CharField(max_length = 32)
@@ -24,8 +24,8 @@ class Person(models.Model):
     birth_date = models.DateField()
     death_date = models.DateField(null = True, blank=True)
     biography = models.TextField(null = True, blank=True)
-    tags = models.ManyToManyField(Tag)
-    events = models.ManyToManyField(Event)
+    tags = models.ManyToManyField(Tag, blank=True)
+    events = models.ManyToManyField(Event, blank=True)
 
 class ShowObject(models.Model):
     latitude = models.FloatField()
@@ -33,9 +33,9 @@ class ShowObject(models.Model):
     address = models.CharField(max_length = 128, null = True, blank=True)
     name = models.CharField(max_length = 32)
     photo = models.ForeignKey(Photo, on_delete = models.CASCADE, null = True)
-    persons = models.ManyToManyField(Person)
-    tags = models.ManyToManyField(Tag)
-    events = models.ManyToManyField(Event)
+    persons = models.ManyToManyField(Person, blank=True)
+    tags = models.ManyToManyField(Tag, blank=True)
+    events = models.ManyToManyField(Event, blank=True)
 
 
 class ShowPoint(models.Model):
@@ -64,10 +64,6 @@ class TripPoint(models.Model):
     name = models.CharField(max_length=32, null=True, default="Point")    
     trip = models.ForeignKey(Trip, related_name="points", on_delete = models.CASCADE)
     order = models.IntegerField()
-    # class Meta:
-    #     constraints = [
-    #         models.UniqueConstraint(fields=['trip', 'point'], name="trip_point")
-    #     ]
 
 class TripPointObject(models.Model):
     trip_point = models.ForeignKey(TripPoint, related_name="show_objects", on_delete = models.CASCADE)
