@@ -23,7 +23,7 @@ class ObjectForm(forms.ModelForm):
     address = forms.TextInput()
     class Meta:
         model = models.ShowObject
-        fields = ['name','address','longitude','latitude']
+        fields = ['name','address','longitude','latitude', 'description']
 
 class TripPointForm(forms.ModelForm):
     longitude = forms.FloatField(widget=forms.HiddenInput())

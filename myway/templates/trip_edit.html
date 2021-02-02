@@ -98,12 +98,9 @@ function setPoint() {
 
 }
 </script>
-<table>
-    <tr>
-        <td valign="top">
-        <div>
+<div class="row">
+    <div class="col">
             <h1>{% trans "Trip Details" %}</h1>            
-        </div>
         <form action="" method="post">
             {% csrf_token %}             
             {{ form|crispy}}
@@ -144,13 +141,9 @@ function setPoint() {
                 <input type="submit" value='{% trans "Cancel" %}'> 
             </p>
         </form>                
-        </td>
-        <td>
+    </div>
+    <div class="col">
             <div id="map" style="width: 640;height: 480;"/>
-        </td>
-    </tr>
-</table>
-
-
-
+    </div>
+<div>
 {% endblock %}
