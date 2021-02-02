@@ -2,19 +2,21 @@
 {% load crispy_forms_tags %}
 {% block content %}
 {% load i18n %}
-<div>
-    <h1>{% trans "Events" %}</h1>            
+<div class="row">
+    <div class="col">
+        <h1>{% trans "Events" %}</h1>            
+        <table class="table">
+        {% for event in object_list %}
+        <tr>
+            <td>{{ event.name }}</td>
+            <td>
+                <a href="{% url 'core:event_delete' event.id %}">Delete</a>
+                <a href="{% url 'core:event_edit' event.id %}">Edit</a>
+            </td>    
+        </tr>
+        {% endfor %}
+        </table>
+        <a class="btn btn-primary" href="{% url 'core:event_create' %}">New Event</a>
+    </div>
 </div>
-<table>
-{% for event in object_list %}
-<tr>
-    <td><h2>{{ event.name }}</h2></td>
-    <td>
-        <a href="{% url 'core:event_delete' event.id %}">Delete</a>
-        <a href="{% url 'core:event_edit' event.id %}">Edit</a>
-    </td>    
-</tr>
-{% endfor %}
-</table>
-<a href="{% url 'core:event_create' %}">New Event</a>
 {% endblock content %}

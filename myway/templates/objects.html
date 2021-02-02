@@ -2,19 +2,21 @@
 {% load crispy_forms_tags %}
 {% block content %}
 {% load i18n %}
-<div>
-    <h1>{% trans "Objects" %}</h1>            
+<div class="row">
+    <div class="col">
+        <h1>{% trans "Objects" %}</h1>            
+        <table class="table">
+        {% for object in object_list %}
+        <tr>
+            <td>{{ object.name }}</td>
+            <td>
+                <a href="{% url 'core:object_delete' object.id %}">Delete</a>
+                <a href="{% url 'core:object_edit' object.id %}">Edit</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </table>
+        <a class="btn btn-primary" href="{% url 'core:object_create' %}">New object</a>
+    </div>
 </div>
-<table>
-{% for object in object_list %}
-<tr>
-    <td>{{ object.name }}</td>
-    <td>
-        <a href="{% url 'core:object_delete' object.id %}">Delete</a>
-        <a href="{% url 'core:object_edit' object.id %}">Edit</a>
-    </td>
-</tr>
-{% endfor %}
-</table>
-<a href="{% url 'core:object_create' %}">New object</a>
 {% endblock content %}

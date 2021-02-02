@@ -5,6 +5,7 @@
 <h1>Delete</h1>
 <form action="" method="post">{% csrf_token %}
 <p>Are you sure you want to delete "{{ event.name }}"?</p>
-<button type="submit">Confirm</button>
+<button class="btn btn-danger" type="submit">Confirm</button>
+<input class="btn btn-secondary" type="submit" value="Cancel">
 </form>
 {% endblock content %}

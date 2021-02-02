@@ -2,19 +2,19 @@
 {% load crispy_forms_tags %}
 {% block content %}
 {% load i18n %}
-<div>
+<div class="row">
     <h1>{% trans "Tags" %}</h1>            
+    <table class="table">
+    {% for tag in object_list %}
+    <tr>
+        <td>{{ tag.name }}</td>
+        <td>
+            <a href="{% url 'core:tag_delete' tag.id %}">Delete</a>
+            <a href="{% url 'core:tag_edit' tag.id %}">Edit</a>
+        </td>    
+    </tr>
+    {% endfor %}
+    </table>
+    <a class="btn btn-primary" href="{% url 'core:tag_create' %}">New Tag</a>
 </div>
-<table>
-{% for tag in object_list %}
-<tr>
-    <td><h2>{{ tag.name }}</h2></td>
-    <td>
-        <a href="{% url 'core:tag_delete' tag.id %}">Delete</a>
-        <a href="{% url 'core:tag_edit' tag.id %}">Edit</a>
-    </td>    
-</tr>
-{% endfor %}
-</table>
-<a href="{% url 'core:tag_create' %}">New Tag</a>
 {% endblock content %}

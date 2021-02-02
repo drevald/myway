@@ -11,25 +11,23 @@ function preview(form) {
 }
 
 </script>
-<div>
-    <div>
+<div class="row">
+    <div class="col">
         <h1>{% trans "photo Details" %}</h1>            
-    </div>
-    <div>
-            <img src="data:image/jpg;base64,{{ image }}">
-    </div>
-    <form action=""  enctype="multipart/form-data" method="post">
-        {% csrf_token %}             
-        <p><label for="id_title">Title:</label>{{ form.title }}</p>
-        <p><label for="id_file">File:</label>{{ form.file }}</p>        
+        <img src="data:image/jpg;base64,{{ image }}">
+        <form action=""  enctype="multipart/form-data" method="post">
+        {% csrf_token %}       
+        {{ form|crispy }}      
+        {% comment %} <p><label for="id_title">Title:</label>{{ form.title }}</p>
+        <p><label for="id_file">File:</label>{{ form.file }}</p>         {% endcomment %}
         <p>
-            <a href="{% url 'core:object_photo_rotate' pk new_id 90 %}">Rotate Counterclockwise</a>
+            <a class="btn" href="{% url 'core:object_photo_rotate' pk new_id 90 %}">Rotate Counterclockwise</a>
         </p>
         <p>
-            <input type="submit" value='{% trans "Save" %}' name='save'>
-            <input type="submit" value='{% trans "Cancel" %}' name='cancel'> 
+            <input class="btn btn-primary" type="submit" value='{% trans "Save" %}' name='save'>
+            <input class="btn btn-secondary" type="submit" value='{% trans "Cancel" %}' name='cancel'> 
         </p>
     </form>                
-</div>
-
+    </div>
+</div>    
 {% endblock %}

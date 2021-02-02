@@ -3,18 +3,22 @@
     <head>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>    
-<style>
-<!--
-    {% comment %} body {font-family: sans-serif; background-color: #eeeeee;}
-    h1   {color: blue;}
-    p    {color: red;}
-    td  {font-family: sans-serif; color: red} {% endcomment %}
--->    
-</style>
     </head>
     <body>
-        <a href="{% url 'core:home' %}">Home</a>
-        <hr>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="nav-link active" href="{% url 'core:home' %}">Home</a>
+            <a class="nav-link" href="{% url 'core:trips' %}">Trips</a>
+            <a class="nav-link" href="{% url 'core:objects' %}">Show Objects</a>
+            <a class="nav-link" href="{% url 'core:events' %}">Events</a>
+            <a class="nav-link" href="{% url 'core:persons' %}">Persons</a>
+            <a class="nav-link" href="{% url 'core:tags' %}">Tags</a>
+            <a class="nav-link disabled" href="#">Sites</a>
+        </nav>
+        <div class="container">
+            <div class="row">
+                <div class="column">&nbsp;</div>
+            </div>
+        </div>
         <div class="container">
                 {% block content %}
                 {% endblock %}

@@ -49,8 +49,8 @@ function init () {
                 {% csrf_token %}             
                 {{ form|crispy}}  
                 <p><a href="{% url 'core:object_photo' object.id 0 %}">Set Photo</a></p>              
-                <input type="submit" value='{% trans "Save" %}'>
-                <input type="submit" value='{% trans "Cancel" %}'> 
+                <input class="btn btn-primary"  type="submit" value='{% trans "Save" %}'>
+                <a class="btn btn-secondary" href="/">{% trans "Cancel" %}</a> 
             </form>                
     </div>
     <div class="col">
@@ -79,5 +79,6 @@ function init () {
             <a href="{% url 'core:object_tags' object.id %}">{% trans "Add tag" %}</a>            
     </div>
 </div>    
+
 
 {% endblock %}

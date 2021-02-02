@@ -1,5 +1,7 @@
 from django import forms
 from . import models
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, HTML, Field, Div, Column
 
 class TripForm (forms.ModelForm):    
     name = forms.CharField();
@@ -21,6 +23,17 @@ class ObjectForm(forms.ModelForm):
     latitude = forms.FloatField(widget=forms.HiddenInput())
     name = forms.TextInput()
     address = forms.TextInput()
+    helper = FormHelper()
+    helper.layout = Layout(
+        Div(
+            Div('longitude', wrapper_class='col'),
+            Div('latitude', wrapper_class='col'),  
+            Div('name', wrapper_class='col'),
+            Div('address', wrapper_class='col')),
+        Div(
+            Field('description', wrapper_class='col')
+        )
+    )
     class Meta:
         model = models.ShowObject
         fields = ['name','address','longitude','latitude', 'description']

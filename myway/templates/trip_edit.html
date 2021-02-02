@@ -105,40 +105,38 @@ function setPoint() {
             {% csrf_token %}             
             {{ form|crispy}}
             {% if object.points.all|length > 0 %}
-            <table>
-            <tr><td><label>Points:</label></td></tr>
+            <h1>{% trans "Points" %}</h1>            
+            <table class="table">
             {% for point in object.points.all %}
-            <tr>
-                <td>{% trans "Point number" %}{{point.order}}</td>
-                <td><a href="{% url 'core:trip_point_delete' point.trip.id point.id %}">Delete</a></td>
-                <td><a href="{% url 'core:trip_point_edit' object.id point.id %}">Edit</a></td>                
-                <td><a href="{% url 'core:trip_point_objects' point.trip_id point.id %}">Edit Objects</a></td> 
-            </tr>
-            <tr>
-                <td colspan="4">
-                    <table>
-                        <tr>
-                            {% for show_object in point.show_objects.all %}
-                                <td>
-                                    <small>{{ show_object.object.name }}<small><br>
-                                    <img src="data:image/jpg;base64,{{ show_object.object.photo.thumbnail }}" width="100" height="100">
-                                </td>
-                            {% endfor %}
-                        </tr>
-                    </table>
-                </td>
-            </tr>            
+                <tr>
+                    <td>{% trans "Point number" %}{{point.order}}</td>
+                    <td><a href="{% url 'core:trip_point_delete' point.trip.id point.id %}">Delete</a></td>
+                    <td><a href="{% url 'core:trip_point_edit' object.id point.id %}">Edit</a></td>                
+                    <td><a href="{% url 'core:trip_point_objects' point.trip_id point.id %}">Edit Objects</a></td> 
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <table border=1>
+                            <tr>
+                                {% for show_object in point.show_objects.all %}
+                                    <td>
+                                        <small>{{ show_object.object.name }}<small><br>
+                                        <img src="data:image/jpg;base64,{{ show_object.object.photo.thumbnail }}" width="100" height="100">
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        </table>
+                    </td>
+                </tr>            
             {% endfor %}
             </table>
             {% endif %}            
             <p>
                 <a href="{% url 'core:trip_point_add' trip.id %}">Add point</a>
-                <input type="button" value="Preview">
-                <input type="button" value="Hide">
             </p>
             <p>
-                <input type="submit" value='{% trans "Save" %}'>
-                <input type="submit" value='{% trans "Cancel" %}'> 
+                <input type="submit" class="btn btn-primary" value='{% trans "Save" %}'>
+                <input type="submit" class="btn btn-light" value='{% trans "Cancel" %}'> 
             </p>
         </form>                
     </div>
