@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load i18n %}
+<div class="row">
+    <div class="col">
+        <h1>{% trans "Object Sites for " %}{{ object.name }}</h1>            
+    </div>
+</div>
+
+<table class="table">
+    <tr>
+        <td>{% trans "Related Sites" %}</td>
+        <td>{% trans "Sites list" %}</td>
+    </tr>
+    <tr>
+        <td>
+            {% for site in object.sites.all %}
+                {{ site.name }}<a class="btn btn-primary btn-sm" href="{% url 'core:object_site_delete' object.id site.id %}">&gt;&gt;</a>&nbsp;<br>
+            {% endfor %}        
+        </td>
+        <td>
+            {% for site in all_sites %}
+                <a class="btn btn-primary btn-sm" href="{% url 'core:object_site_add' object.id site.id %}">&lt;&lt;</a>&nbsp;{{ site.url }}<br>
+            {% endfor %}        
+        </td>
+    </tr>
+</table>
+{% endblock %}

@@ -328,6 +328,27 @@ class PersonEditView(UpdateView):
     fields = '__all__'
     success_url = reverse_lazy('core:persons')    
 
+class SitesView(ListView):
+    model = models.Site
+    template_name = 'sites.html'
+
+class SiteCreateView(CreateView):
+    model = models.Site
+    template_name = 'site_edit.html'
+    fields = '__all__'
+    success_url = reverse_lazy('core:sites')    
+
+class SiteDeleteView(DeleteView):
+    model = models.Site
+    template_name = 'site_delete.html'
+    success_url = reverse_lazy('core:sites')    
+
+class SiteEditView(UpdateView):
+    model = models.Site
+    template_name = 'site_edit.html'
+    fields = '__all__'
+    success_url = reverse_lazy('core:sites')   
+
 class EventsView(ListView):
     model = models.Event
     template_name = 'events.html'
@@ -441,3 +462,27 @@ class ObjectPersonsDeleteView(ObjectPersonsView):
         object.persons.remove(person)
         object.save()
         return super().get(self, request, *args, **kwargs)
+
+class ObjectSitesView(DetailView):
+    model = models.ShowObject
+    template_name = 'object_sites.html'    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['all_sites'] = models.Site.objects.all()
+        return context    
+
+class ObjectSitesAddView(ObjectSitesView):
+    def get(self, request, *args, **kwargs):
+        object = models.ShowObject.objects.get(id = kwargs['pk'])
+        site = models.Site.objects.get(id = kwargs['site_id'])
+        object.sites.add(site)
+        object.save()
+        return super().get(self, request, *args, **kwargs)
+
+class ObjectSitesDeleteView(ObjectSitesView):
+    def get(self, request, *args, **kwargs):
+        object = models.ShowObject.objects.get(id = kwargs['pk'])
+        site = models.Site.objects.get(id = kwargs['site_id'])
+        object.sites.remove(site)
+        object.save()
+        return super().get(self, request, *args, **kwargs)        

@@ -27,6 +27,10 @@ class Person(models.Model):
     tags = models.ManyToManyField(Tag, blank=True)
     events = models.ManyToManyField(Event, blank=True)
 
+class Site(models.Model):
+    name = models.CharField(max_length=128, null=True, blank= True)
+    url = models.CharField(max_length=1024)
+
 class ShowObject(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
@@ -37,7 +41,7 @@ class ShowObject(models.Model):
     persons = models.ManyToManyField(Person, blank=True)
     tags = models.ManyToManyField(Tag, blank=True)
     events = models.ManyToManyField(Event, blank=True)
-
+    sites = models.ManyToManyField(Site, blank=True)
 
 class ShowPoint(models.Model):
     latitude = models.FloatField()
@@ -78,3 +82,19 @@ class TripPointObject(models.Model):
 class TripTag(models.Model):
     trip = models.ForeignKey(Trip, on_delete = models.CASCADE)
     tag = models.ForeignKey(Tag, on_delete = models.CASCADE)
+
+class PersonSite(models.Model):
+    person = models.ForeignKey(Person, on_delete = models.CASCADE)
+    site = models.ForeignKey(Site, on_delete = models.CASCADE)
+
+class EventSite(models.Model):
+    event = models.ForeignKey(Event, on_delete = models.CASCADE)
+    site = models.ForeignKey(Site, on_delete = models.CASCADE)
+
+class TagSite(models.Model):
+    tag = models.ForeignKey(Tag, on_delete = models.CASCADE)
+    site = models.ForeignKey(Site, on_delete = models.CASCADE)
+
+class ObjectSite(models.Model):
+    object = models.ForeignKey(ShowObject, on_delete = models.CASCADE)
+    site = models.ForeignKey(Site, on_delete = models.CASCADE)

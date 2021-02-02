@@ -44,6 +44,11 @@ urlpatterns = [
     path('tags/<pk>/delete', views.TagDeleteView.as_view(), name='tag_delete'),
     path('tags/<pk>/edit', views.TagEditView.as_view(), name='tag_edit'),
 
+    path('sites', views.SitesView.as_view(), name='sites'),
+    path('sites/create', views.SiteCreateView.as_view(), name='site_create'),
+    path('sites/<pk>/delete', views.SiteDeleteView.as_view(), name='site_delete'),
+    path('sites/<pk>/edit', views.SiteEditView.as_view(), name='site_edit'),
+
     path('object/<pk>/events', views.ObjectEventsView.as_view(), name='object_events'),
     path('object/<pk>/event/<int:event_id>/add', views.ObjectEventsAddView.as_view(), name='object_event_add'),
     path('object/<pk>/event/<int:event_id>/delete', views.ObjectEventsDeleteView.as_view(), name='object_event_delete'),
@@ -54,6 +59,10 @@ urlpatterns = [
 
     path('object/<pk>/persons', views.ObjectPersonsView.as_view(), name='object_persons'),
     path('object/<pk>/person/<int:person_id>/add', views.ObjectPersonsAddView.as_view(), name='object_person_add'),
-    path('object/<pk>/person/<int:person_id>/delete', views.ObjectPersonsDeleteView.as_view(), name='object_person_delete')    
+    path('object/<pk>/person/<int:person_id>/delete', views.ObjectPersonsDeleteView.as_view(), name='object_person_delete'),    
+
+    path('object/<pk>/sites', views.ObjectSitesView.as_view(), name='object_sites'),
+    path('object/<pk>/site/<int:site_id>/add', views.ObjectSitesAddView.as_view(), name='object_site_add'),
+    path('object/<pk>/site/<int:site_id>/delete', views.ObjectSitesDeleteView.as_view(), name='object_site_delete')  
 
 ]
