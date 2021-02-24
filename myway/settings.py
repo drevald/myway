@@ -16,7 +16,6 @@ DATABASES = {
 
 INSTALLED_APPS = [
     'django.contrib.staticfiles',
-    'debug_toolbar',    
     'myway.core'
 ]
 
@@ -34,10 +33,6 @@ TEMPLATES = [
         #     ],
         # },
     },
-]
-
-MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 INTERNAL_IPS = [
