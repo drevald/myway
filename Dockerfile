@@ -9,4 +9,4 @@ RUN pip install -r requirements.txt
 RUN apt-get update
 RUN apt-get -y install gettext
 COPY boot.sh /code/
-CMD ./boot.sh
+CMD /code/boot.sh
