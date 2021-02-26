@@ -163,7 +163,6 @@ def trip_point_down(request, trip_id, pk):
     return HttpResponseRedirect(reverse('core:trip_edit', kwargs={'pk':trip_id}))      
 
 class TripPointAddView(CreateView):
-    print("TRIP POINT ADD VIEW")
     model = models.TripPoint
     template_name = 'trip_point_new.html'
     form_class = forms.TripPointForm
