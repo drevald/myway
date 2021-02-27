@@ -13,46 +13,13 @@ if os.path.exists(dot_env):
     env.read_env(dot_env)
 
 DEBUG = True
+
 ROOT_URLCONF = "myway.urls"
 
 DATABASES = {
-    'default': env.db()
+    'default': env.db(),
+    'replica': env.db()
 }
-
-# DATABASES = {
-# 'default': env.db(),
-# 'replica': env.db()
-# }
-
-# DATABASES['replica']['TEST'] = {'MIRROR': 'default'}
-# DATABASES['replica']['name'] = 'mytest'
-
-# DATABASES = {
-#     'default': env.db(),
-#     'replica': env.db(), 'TEST': {'MIRROR': 'default'}
-# }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'myway',
-#         'USER': 'postgres',
-#         'PASSWORD': 'password',
-#         'HOST': 'localhost',
-#         'PORT': '5432'
-#     },
-#     'replica': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'mytest',
-#         'USER': 'postgres',
-#         'PASSWORD': 'password',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#         'TEST': {
-#             'MIRROR': 'default',
-#         }
-#     }
-# }
 
 INSTALLED_APPS = [
     'myway.core',
