@@ -324,7 +324,8 @@ class PersonDeleteView(DeleteView):
 class PersonEditView(UpdateView):
     model = models.Person
     template_name = 'person_edit.html'
-    fields = '__all__'
+    form_class = forms.PersonForm
+    # fields = '__all__'
     success_url = reverse_lazy('core:persons')    
 
 class SitesView(ListView):

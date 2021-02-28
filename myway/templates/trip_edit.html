@@ -109,14 +109,14 @@ function setPoint() {
             <table class="table">
             {% for point in object.points.all %}
                 <tr>
-                    <td>{% trans "Point number" %}{{point.order}}</td>
+                    <td>({{point.order}}) {{point.name}}</td>
                     <td><a href="{% url 'core:trip_point_delete' point.trip.id point.id %}">Delete</a></td>
                     <td><a href="{% url 'core:trip_point_edit' object.id point.id %}">Edit</a></td>                
-                    <td><a href="{% url 'core:trip_point_objects' point.trip_id point.id %}">Edit Objects</a></td> 
+                    <td><a href="{% url 'core:trip_point_objects' point.trip_id point.id %}">Objects</a></td> 
                 </tr>
                 <tr>
                     <td colspan="4">
-                        <table border=1>
+                        <table border=0>
                             <tr>
                                 {% for show_object in point.show_objects.all %}
                                     <td>

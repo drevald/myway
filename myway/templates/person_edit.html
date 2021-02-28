@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 {% block content %}
 {% load i18n %}
-<div class="row">
+<div class="row">        
     <div class="col-3">
         <div>
             <h1>{% trans "Person details" %}</h1>            
@@ -13,6 +13,9 @@
             <input class="btn btn-primary"  type="submit" value='{% trans "Save" %}'>
             <a class="btn btn-secondary" href="/">{% trans "Cancel" %}</a> 
         </form>                
+    </div>
+    <div>
+        <img src="data:image/jpg;base64,{{ object.thumbnail }}">
     </div>
 </div>
 {% endblock %}

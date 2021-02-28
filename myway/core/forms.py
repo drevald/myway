@@ -36,7 +36,7 @@ class ObjectForm(forms.ModelForm):
     )
     class Meta:
         model = models.ShowObject
-        fields = ['name','address','longitude','latitude', 'description']
+        fields = ['name','address', 'last_version_date', 'status', 'style', 'longitude','latitude', 'description']
 
 class TripPointForm(forms.ModelForm):
     longitude = forms.FloatField(widget=forms.HiddenInput())
@@ -45,3 +45,15 @@ class TripPointForm(forms.ModelForm):
     class Meta:
         model = models.TripPoint
         fields = ['name','longitude','latitude']        
+
+class PersonForm(forms.ModelForm):
+    birth_date = forms.DateField(input_formats=['%Y-%m-%d','%Y'])
+    death_date = forms.DateField(required=False, input_formats=['%Y-%m-%d','%Y'])
+    photo = forms.FileField(required=False, widget=forms.FileInput())
+    class Meta:
+        model = models.Person
+        fields = '__all__'              
+
+# ['%Y-%m-%d',      # '2006-10-25'
+# '%m/%d/%Y',       # '10/25/2006'
+# '%m/%d/%y']   

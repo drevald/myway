@@ -24,6 +24,7 @@ class Person(models.Model):
     birth_date = models.DateField()
     death_date = models.DateField(null = True, blank=True)
     biography = models.TextField(null = True, blank=True)
+    photo = models.ForeignKey(Photo, on_delete = models.CASCADE, null = True)
     tags = models.ManyToManyField(Tag, blank=True)
     events = models.ManyToManyField(Event, blank=True)
 
@@ -34,8 +35,11 @@ class Site(models.Model):
 class ShowObject(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
-    address = models.CharField(max_length = 128, null = True, blank=True)
     name = models.CharField(max_length = 32)
+    last_version_date = models.DateField(null = True, blank=True)
+    address = models.CharField(max_length = 128, null = True, blank=True)
+    status = models.CharField(max_length = 128, null = True, blank=True)
+    style = models.CharField(max_length = 32, null = True, blank=True)
     description = models.TextField(null = True, blank=True)
     photo = models.ForeignKey(Photo, on_delete = models.CASCADE, null = True)
     persons = models.ManyToManyField(Person, blank=True)
