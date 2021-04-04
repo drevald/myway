@@ -1,10 +1,10 @@
 from django import forms
 from . import models
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, HTML, Field, Div, Column
+from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, HTML, Field, Div, Column, Row, Button
 
 class TripForm (forms.ModelForm):    
-    name = forms.CharField();
+    name = forms.CharField()
     class Meta:
         model = models.Trip
         fields = ['name']
@@ -25,15 +25,23 @@ class ObjectForm(forms.ModelForm):
     address = forms.TextInput()
     helper = FormHelper()
     helper.layout = Layout(
-        Div(
-            Div('longitude', wrapper_class='col'),
-            Div('latitude', wrapper_class='col'),  
-            Div('name', wrapper_class='col'),
-            Div('address', wrapper_class='col')),
-        Div(
-            Field('description', wrapper_class='col')
+        Row(
+            Column(HTML('<img src="data:image/jpg;base64,{{ image }}"/>'), 'name', 'address', 'status', 'style',         
+            Submit('submit', 'Save'), Button('button', 'Cancel'), css_class='col', style='vertical-align:top; background-color: green;'),
+            Column('description', css_class='col', style='vertical-align:top; background-color: coral;')
         )
     )
+
+    # helper.layout = Layout(
+    #     Div(
+    #         Div('longitude', wrapper_class='col'),
+    #         Div('latitude', wrapper_class='col'),  
+    #         Div('name', wrapper_class='col'),
+    #         Div('address', wrapper_class='col')),
+    #     Div(
+    #         Field('description', wrapper_class='col')
+    #     )
+    # )
     class Meta:
         model = models.ShowObject
         fields = ['name','address', 'last_version_date', 'status', 'style', 'longitude','latitude', 'description']

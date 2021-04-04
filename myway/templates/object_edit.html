@@ -35,57 +35,50 @@ function init () {
 }
    
 </script>
-<div class="row">
+<!-- <div class="row" style="background-color:beige;">
     <div class="col">
         <h1>{% trans "Show Object" %}</h1>            
     </div>
 </div>
-<div class="row">
-    <div class="col">
-            {% if image %}
-            <img src="data:image/jpg;base64,{{ image }}">
-            {% endif %}
-            <form action="" method="post">
-                {% csrf_token %}             
-                {{ form|crispy}}  
-                <p><a href="{% url 'core:object_photo' object.id 0 %}">Set Photo</a></p>              
-                <input class="btn btn-primary"  type="submit" value='{% trans "Save" %}'>
-                <a class="btn btn-secondary" href="/">{% trans "Cancel" %}</a> 
-            </form>                
-    </div>
-    <div class="col">
+<div class="row" style="background-color: aqua;">
+    <form action="" method="post">
+        {% crispy form %}  
+    </form>  
+    <div class="col" style="background-color:chartreuse;">
             <div id="map" style="width: 360;height: 480;"></div>
     </div>
-    <div class="col">
+    <div class="col" style="background-color: darkgoldenrod">
         <h3>{% trans "Related events" %}</h3>
-            {% for event in object.events.all %}
-                {{ event.name }}
-            {% endfor %}
-            <br>
-            <a href="{% url 'core:object_events' object.id %}">{% trans "Add event" %}</a>
-            <hr>
-            <h3>{% trans "Related persons" %}</h3>
-            {% for person in object.persons.all %}
-                {{ person.first_name }}&nbsp;{{ person.last_name }}
-            {% endfor %}
-            <br>
-            <a href="{% url 'core:object_persons' object.id %}">{% trans "Add person" %}</a>            
-            <hr>
-            <h3>{% trans "Related tags" %}</h3>
-            {% for tag in object.tags.all %}
-                {{ tag.name }}
-            {% endfor %}
-            <br>
-            <a href="{% url 'core:object_tags' object.id %}">{% trans "Add tag" %}</a>       
-            <hr>
-            <h3>{% trans "Related sites" %}</h3>
-            {% for site in object.sites.all %}
-                {{ site.url }}
-            {% endfor %}
-            <br>
-            <a href="{% url 'core:object_sites' object.id %}">{% trans "Add site" %}</a>                    
+        {% for event in object.events.all %}
+            {{ event.name }}
+        {% endfor %}
+        <br>
+        <a href="{% url 'core:object_events' object.id %}">{% trans "Add event" %}</a>
+        <hr>
+        <h3>{% trans "Related persons" %}</h3>
+        {% for person in object.persons.all %}
+            {{ person.first_name }}&nbsp;{{ person.last_name }}
+        {% endfor %}
+        <br>
+        <a href="{% url 'core:object_persons' object.id %}">{% trans "Add person" %}</a>            
+        <hr>
+        <h3>{% trans "Related tags" %}</h3>
+        {% for tag in object.tags.all %}
+            {{ tag.name }}
+        {% endfor %}
+        <br>
+        <a href="{% url 'core:object_tags' object.id %}">{% trans "Add tag" %}</a>       
+        <hr>
+        <h3>{% trans "Related sites" %}</h3>
+        {% for site in object.sites.all %}
+            {{ site.url }}
+        {% endfor %}
+        <br>
+        <a href="{% url 'core:object_sites' object.id %}">{% trans "Add site" %}</a>                    
     </div>
-</div>    
+</div>     -->
 
+
+{% crispy form %} 
 
 {% endblock %}
