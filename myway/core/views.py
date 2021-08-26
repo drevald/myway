@@ -361,7 +361,7 @@ class EventCreateView(CreateView):
 class EventDeleteView(DeleteView):
     model = models.Event
     template_name = 'event_delete.html'
-    success_url = reverse_lazy('core:events')    
+    success_url = reverse_lazy('core:events')
 
 class EventEditView(UpdateView):
     model = models.Event

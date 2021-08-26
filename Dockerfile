@@ -7,6 +7,7 @@ COPY requirements.txt /code/
 COPY myway /code/myway
 RUN pip install -r requirements.txt
 RUN apt-get update
-RUN apt-get -y install gettext
+RUN apt-get -y install gettext dos2unix
 COPY boot.sh /code/
-CMD ./boot.sh
+RUN dos2unix -o /code/boot.sh
+CMD /code/boot.sh
