@@ -9,16 +9,17 @@ services:
     volumes:
       - data:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - 5435:5435
+    command: -p 5435
   web:
     build: .
     environment:
-      - DATABASE_URL=postgres://postgres:password@postgres:5432/myway
-      - PORT=8000
+      - DATABASE_URL=postgres://postgres:password@postgres:5435/myway
+      - PORT=4000
     volumes:
       - .:/code
     ports:
-      - "8000:8000"
+      - "4000:4000"
     depends_on:
       - postgres
 volumes:
