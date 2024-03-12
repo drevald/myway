@@ -1,4 +1,3 @@
-#! /bin/sh
 python main.py compilemessages
 python main.py collectstatic --noinput
 python main.py migrate

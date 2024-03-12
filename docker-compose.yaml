@@ -16,8 +16,6 @@ services:
     environment:
       - DATABASE_URL=postgres://postgres:password@postgres:5435/myway
       - PORT=4000
-    volumes:
-      - .:/code
     ports:
       - "4000:4000"
     depends_on:
